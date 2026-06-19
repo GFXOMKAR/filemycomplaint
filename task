@@ -1,0 +1,38 @@
+# File My Complaint — Task Tracker
+
+## Phase 1: Homepage & CSS
+- [x] Update `index.html` — hero, 15 service cards, testimonials, advocate profile, WhatsApp button
+- [x] Add CSS to `style.css` — new sections (testimonials, advocate, service page layout, FAQ accordion, process timeline, WhatsApp btn)
+- [x] Update `script.js` — FAQ accordion, WhatsApp function, consultation modal, service form handler
+
+## Phase 2: Service Pages (15 pages)
+- [x] `service-civil-litigation.html`
+- [x] `service-criminal-matters.html`
+- [x] `service-cyber-crime.html`
+- [x] `service-consumer-complaints.html`
+- [x] `service-family-divorce.html`
+- [x] `service-property-disputes.html`
+- [x] `service-cheque-bounce.html`
+- [x] `service-employment-labour.html`
+- [x] `service-corporate-business.html`
+- [x] `service-contract-drafting.html`
+- [x] `service-money-recovery.html`
+- [x] `service-legal-notices.html`
+- [x] `service-documentation.html`
+- [x] `service-arbitration.html`
+- [x] `service-other-matters.html`
+
+## Phase 3: Verification
+- [x] Test all 15 service page links from homepage
+- [x] Test complaint form validation on service pages
+- [x] Test responsive layout (mobile)
+- [x] Verify existing pages still work
+
+## Phase 4: Search & Filter Alignment
+- [x] Align `find-your-law.html` dropdown filter with the 15 homepage services
+- [x] Update `bare_acts_db` category tags in `script.js`
+- [x] Update `ISSUE_KEYWORD_MAP` keywords and category tags in `script.js`
+- [x] Update `WIZARD_CATEGORIES` list in `script.js`
+- [x] Update `authMap` and description prompts in `script.js`
+
+

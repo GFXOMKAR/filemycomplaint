@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Complaints — File My Complaint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    .my-complaints-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 2rem;
+      min-height: 60vh;
+    }
+
+    .dashboard-header {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .dashboard-title h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--navy);
+    }
+
+    .dashboard-title p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .complaints-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .complaint-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s;
+    }
+
+    .complaint-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .case-id {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--gold-dark);
+      background: rgba(163, 128, 82, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+    }
+
+    .status-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border-radius: 50px;
+      letter-spacing: 0.05em;
+    }
+
+    .status-received {
+      background: #E0F2FE;
+      color: #0369A1;
+    }
+
+    .status-pending {
+      background: #FEF3C7;
+      color: #D97706;
+    }
+
+    .status-solved {
+      background: #D1FAE5;
+      color: #047857;
+    }
+
+    .card-body h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-body .category {
+      font-size: 0.8rem;
+      color: var(--gold);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-body .desc-preview {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .remarks-box {
+      background: var(--cream-dark);
+      border-left: 4px solid var(--gold);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.25rem;
+      font-size: 0.875rem;
+    }
+
+    .remarks-title {
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+
+    .remarks-text {
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 5rem 2rem;
+      background: var(--white);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Details Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 25, 44, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--white);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--border);
+    }
+
+    .modal-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-family: var(--font-display);
+      color: var(--navy);
+      font-size: 1.25rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
+
+    .detail-row {
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.05em;
+    }
+
+    .detail-value {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .document-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      color: var(--gold-dark);
+      text-decoration: none;
+      margin-top: 0.5rem;
+      margin-right: 0.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .document-chip:hover {
+      background: var(--border);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-logo" onclick="window.location.href='index.html'"
+      style="cursor:pointer;display:flex;align-items:center;gap:10px;">
+      <div class="nav-logo-icon"></div>
+      <div class="nav-logo-text">
+        File My Complaint
+        <small>Legal Advocates</small>
+      </div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html" id="nav-home">Home</a>
+      <a href="about.html" id="nav-about">About Us</a>
+      <a href="complaint.html" class="nav-cta" id="nav-complaint">File Complaint</a>
+    </div>
+    <div class="nav-user" id="nav-user-section" style="display:none;">
+      <span class="nav-user-name" id="nav-user-name">Welcome</span>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="page-header" style="background:var(--navy); padding: 4rem 0;">
+    <div class="page-header-inner" style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+      <p class="page-header-tag" style="color:var(--gold-light);">User Dashboard</p>
+      <h1 style="color:var(--white); font-family: var(--font-display); font-size: 2.5rem; margin-top: 0.5rem;">Track
+        Your Cases</h1>
+      <p style="color: rgba(255,255,255,0.6); margin-top: 0.5rem;">Monitor the progress of your submitted complaints,
+        view remarks from legal experts, and manage documentation.</p>
+    </div>
+  </div>
+
+  <!-- MAIN BODY -->
+  <main class="my-complaints-container">
+    <div class="dashboard-header">
+      <div class="dashboard-title">
+        <h2 id="user-greeting">My Submitted Complaints</h2>
+        <p>Real-time status updates of your filings</p>
+      </div>
+      <button class="btn-primary" onclick="window.location.href='complaint.html'"
+        style="padding: 0.65rem 1.5rem; font-size: 0.875rem;">
+        + File New Complaint
+      </button>
+    </div>
+
+    <div class="complaints-grid" id="user-complaints-grid">
+      <!-- Skeletons display during load -->
+      <div class="complaint-card" style="opacity: 0.5;">
+        <div style="height: 20px; background: #eee; width: 30%; border-radius: 4px; margin-bottom: 10px;"></div>
+        <div style="height: 30px; background: #eee; width: 60%; border-radius: 4px; margin-bottom: 15px;"></div>
+        <div style="height: 60px; background: #eee; width: 100%; border-radius: 4px;"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- DETAILS MODAL -->
+  <div class="modal-overlay" id="case-details-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-case-id">Case Details</h3>
+        <button class="modal-close" onclick="closeDetailsModal()">×</button>
+      </div>
+      <div class="modal-body" id="modal-details-content">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner" style="max-width: 1200px; margin: 0 auto; padding: 3rem 2rem 1.5rem;">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div
+              style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-display);font-size:16px;">
+            </div>
+            <span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File The Complaint</span>
+          </div>
+          <p style="font-size:0.875rem;color:rgba(255,255,255,0.45);margin-top:0.75rem;line-height:1.65;">
+            Empowering citizens with legal knowledge and professional advocacy since 2010. Your rights matter — we make
+            sure they are heard.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4
+            style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1rem;">
+            Services</h4>
+          <ul style="list-style:none;">
+            <li style="margin-bottom:0.5rem;"><a onclick="requireAuth('complaint')"
+                style="color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.875rem;cursor:pointer;">File
+                Complaint</a></li>
+            <li style="margin-bottom:0.5rem;"><a href="find-your-law.html"
+                style="color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.875rem;cursor:pointer;">Find Your
+                Law</a></li>
+            <li style="margin-bottom:0.5rem;"><a href="about.html"
+                style="color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.875rem;cursor:pointer;">About Us</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4
+            style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1rem;">
+            Quick Links</h4>
+          <ul style="list-style:none;">
+            <li style="margin-bottom:0.5rem;"><a href="know-your-rights.html"
+                style="color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.875rem;cursor:pointer;">Know Your
+                Rights</a></li>
+            <li style="margin-bottom:0.5rem;"><a href="developer.html"
+                style="color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.875rem;cursor:pointer;">Developer
+                Portal</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom"
+        style="border-top:1px solid rgba(255,255,255,0.08);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:rgba(255,255,255,0.3);margin-top:2rem;">
+        <span>© 2024 File My Complaint. All rights reserved.</span>
+        <span style="font-family:var(--font-mono);">Payments secured by Razorpay</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    feather.replace();
+
+    // Authentication Guard
+    if (!getToken()) {
+      sessionStorage.setItem('authRedirect', 'my-complaints');
+      window.location.href = 'login.html';
+    }
+
+    const user = getStoredUser();
+    let userComplaintsCache = [];
+
+    // Set greeting
+    if (user) {
+      document.getElementById('user-greeting').textContent = `Hello, ${user.fname}!`;
+    }
+
+    // Render user's complaints
+    async function renderUserComplaints() {
+      const grid = document.getElementById('user-complaints-grid');
+      grid.innerHTML = '<div class="empty-state"><p>Loading your complaints...</p></div>';
+
+      try {
+        const data = await api.getMyComplaints();
+        userComplaintsCache = data.complaints || [];
+      } catch (error) {
+        grid.innerHTML = `<div class="empty-state"><p>${error.message || 'Failed to load complaints.'}</p></div>`;
+        return;
+      }
+
+      const userComplaints = userComplaintsCache;
+
+      if (userComplaints.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📂</div>
+            <h3>No Complaints Filed Yet</h3>
+            <p>You haven't filed any legal complaints using this account. Click below to begin our guided wizard.</p>
+            <button class="btn-primary" onclick="window.location.href='complaint.html'">File Your First Complaint</button>
+          </div>
+        `;
+        return;
+      }
+
+      userComplaints.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+
+      grid.innerHTML = userComplaints.map(complaint => {
+        const dateStr = new Date(complaint.submittedAt).toLocaleDateString('en-IN', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        });
+
+        let statusClass = 'status-received';
+        let statusLabel = 'Received';
+        if (complaint.status) {
+          statusLabel = complaint.status;
+          if (complaint.status.toLowerCase() === 'pending') statusClass = 'status-pending';
+          if (complaint.status.toLowerCase() === 'solved') statusClass = 'status-solved';
+        }
+
+        const remarksHtml = complaint.remarks
+          ? `<div class="remarks-box">
+               <div class="remarks-title">⚖️ Advocate Remarks</div>
+               <div class="remarks-text">${complaint.remarks}</div>
+             </div>`
+          : '';
+
+        return `
+          <div class="complaint-card animate-fade-in">
+            <div class="card-top">
+              <span class="case-id">${complaint.caseId || 'FTC-CASE'}</span>
+              <span class="status-badge ${statusClass}">${statusLabel}</span>
+            </div>
+            <div class="card-body">
+              <div class="category">${complaint.category || 'General'}</div>
+              <h3>Complaint Against: ${complaint.against || 'Unknown'}</h3>
+              <p class="desc-preview">${complaint.issueDescription ? complaint.issueDescription.substring(0, 250) + '...' : 'No description provided.'}</p>
+              ${remarksHtml}
+            </div>
+            <div class="card-meta">
+              <span>Filing Date: <strong>${dateStr}</strong></span>
+              <button class="btn-secondary" onclick="openDetailsModal('${complaint.caseId}')" style="padding: 0.4rem 1rem; font-size: 0.8rem; border-color: var(--border);">
+                View Details
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Modal view handlers
+    let currentSelectedCase = null;
+
+    function openDetailsModal(caseId) {
+      const complaint = userComplaintsCache.find(c => c.caseId === caseId);
+      if (!complaint) return;
+
+      currentSelectedCase = complaint;
+      document.getElementById('modal-case-id').textContent = `Case: ${complaint.caseId}`;
+
+      const fileListHtml = complaint.files && complaint.files.length > 0
+        ? complaint.files.map(file => `
+            <a href="${file.data}" download="${file.name}" class="document-chip">
+              📎 ${file.name}
+            </a>
+          `).join('')
+        : '<p style="color:var(--text-muted); font-size:0.9rem;">No documents uploaded.</p>';
+
+      const dateStr = new Date(complaint.submittedAt).toLocaleString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      let statusClass = 'status-received';
+      let statusLabel = complaint.status || 'Received';
+      if (statusLabel.toLowerCase() === 'pending') statusClass = 'status-pending';
+      if (statusLabel.toLowerCase() === 'solved') statusClass = 'status-solved';
+
+      document.getElementById('modal-details-content').innerHTML = `
+        <div class="detail-row">
+          <div class="detail-label">Status</div>
+          <span class="status-badge ${statusClass}" style="display:inline-block; margin-top:0.25rem;">${statusLabel}</span>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Issue Category</div>
+          <div class="detail-value" style="font-weight: 600; color: var(--gold-dark);">${complaint.category}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Against Party</div>
+          <div class="detail-value">${complaint.against}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Filing Date & Time</div>
+          <div class="detail-value">${dateStr}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Detailed Description</div>
+          <div class="detail-value" style="background:#f8fafc; padding:1rem; border-radius:6px; border:1px solid #e2e8f0; white-space:pre-wrap;">${complaint.issueDescription}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Advocate Remarks</div>
+          <div class="detail-value" style="background:#fffbeb; color:#92400e; border:1px solid #fde68a; padding:1rem; border-radius:6px; font-weight:500;">
+            ${complaint.remarks || 'No remarks added yet by the advocate. Your case is currently under review.'}
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Uploaded Attachments</div>
+          <div>${fileListHtml}</div>
+        </div>
+        <div class="detail-row" style="margin-bottom:0;">
+          <button class="btn-primary" onclick="downloadDraftText()" style="width:100%;">
+            ⬇️ Download Generated Legal Notice Draft (.txt)
+          </button>
+        </div>
+      `;
+
+      document.getElementById('case-details-modal').classList.add('open');
+    }
+
+    function closeDetailsModal() {
+      document.getElementById('case-details-modal').classList.remove('open');
+    }
+
+    function downloadDraftText() {
+      if (!currentSelectedCase) return;
+      let draftText = currentSelectedCase.draftText;
+      if (!draftText) {
+        // Try to generate it on the fly using bare_acts_db
+        const act = typeof bare_acts_db !== 'undefined' ? bare_acts_db.find(a => a.cat === currentSelectedCase.category) : null;
+        const template = act && act.chapters && act.chapters[0] && act.chapters[0].sections && act.chapters[0].sections[0]
+          ? act.chapters[0].sections[0].complaintTemplate
+          : `TO,\nTHE COMPETENT COURT / AUTHORITY,\n\nSUBJECT: Legal Complaint regarding ${currentSelectedCase.category}.\n\n1. PLAINTIFF/COMPLAINANT:\nName: [Name]\nAddress: [Your Name, Address, Phone]\n\n2. RESPONDENT/DEFENDANT:\nName: [Accused Name / Company]\n\n3. FACTS:\n[Describe what went wrong]\n\n4. PRAYER:\nGrant relief as deemed fit under law.\n\nDate: [Date]\nComplainant.`;
+        
+        // Render local version of generate draft
+        draftText = template;
+        let disputeValue = "[Disputed Amount]";
+        const amountMatch = (currentSelectedCase.issueDescription || '').match(/(?:Rs\.?|INR|₹)\s*(\d+(?:\s*,\s*\d+)*)/i);
+        if (amountMatch) disputeValue = amountMatch[0];
+        
+        draftText = draftText.replace(/\[Value\]/g, disputeValue);
+        draftText = draftText.replace(/\[Amount\]/g, disputeValue);
+        draftText = draftText.replace(/\[Date\]/g, currentSelectedCase.date || new Date().toLocaleDateString('en-IN'));
+        draftText = draftText.replace(/\[Your Name\]/g, currentSelectedCase.name);
+        draftText = draftText.replace(/\[Name\]/g, currentSelectedCase.name);
+        draftText = draftText.replace(/\[Your Name, Address, Phone\]/g, `${currentSelectedCase.name}, ${currentSelectedCase.city || ''}, ${currentSelectedCase.state || ''}, Phone: ${currentSelectedCase.phone || ''}`);
+        draftText = draftText.replace(/\[Your Name, Mobile, Address\]/g, `${currentSelectedCase.name}, Phone: ${currentSelectedCase.phone || ''}, Address: ${currentSelectedCase.city || ''}, ${currentSelectedCase.state || ''}`);
+        draftText = draftText.replace(/\[Complainant Name\]/g, currentSelectedCase.name);
+        draftText = draftText.replace(/\[APPLICANT\]/g, currentSelectedCase.name);
+        draftText = draftText.replace(/\[PETITIONER\]/g, currentSelectedCase.name);
+        draftText = draftText.replace(/\[PLAINTIFF\]/g, currentSelectedCase.name);
+        draftText = draftText.replace(/\[Accused Name \/ Company\]/g, currentSelectedCase.against);
+        draftText = draftText.replace(/\[Employer Name\]/g, currentSelectedCase.against);
+        draftText = draftText.replace(/\[Tenant Name\]/g, currentSelectedCase.against);
+        draftText = draftText.replace(/\[Drawer Name\]/g, currentSelectedCase.against);
+        draftText = draftText.replace(/\[Co-Partners\]/g, currentSelectedCase.against);
+        draftText = draftText.replace(/\[Respondent Name\]/g, currentSelectedCase.against);
+        draftText = draftText.replace(/\[RESPONDENT\]/g, currentSelectedCase.against);
+        draftText = draftText.replace(/\[DEFENDANT\]/g, currentSelectedCase.against);
+        draftText = draftText.replace(/\[Police Station Name\]/g, `${currentSelectedCase.city || 'Local'} Police Station`);
+        draftText = draftText.replace(/\[Describe what went wrong\]/g, currentSelectedCase.issueDescription || '');
+        draftText = draftText.replace(/\[STATEMENT OF FACTS\]/g, currentSelectedCase.issueDescription || '');
+        draftText = draftText.replace(/\[FACTS\]/g, currentSelectedCase.issueDescription || '');
+
+        // Save draft locally in cache only for download
+        currentSelectedCase.draftText = draftText;
+      }
+
+      const blob = new Blob([draftText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Case_Draft_${currentSelectedCase.caseId}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Modal outside click handler
+    document.getElementById('case-details-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeDetailsModal();
+    });
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      renderUserComplaints();
+    });
+  </script>
+</body>
+
+</html>

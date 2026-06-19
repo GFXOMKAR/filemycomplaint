@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Your Law — File My Complaint</title>
+  <meta name="description" content="Describe your legal issue and instantly find applicable Indian laws, your rights, and the correct authority to file your complaint." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-icon"></div>
+    <div class="nav-logo-text">
+      File My Complaint
+      <small>Legal Assistance Platform</small>
+    </div>
+  </div>
+  <div class="nav-links" id="nav-links">
+    <a onclick="showPage('home')" id="nav-home">Home</a>
+    <a onclick="showPage('find-your-law')" class="active-link" id="nav-findlaw">Find Your Law</a>
+    <a onclick="showPage('about')" id="nav-about">About Us</a>
+    <a onclick="requireAuth('complaint')" class="nav-cta" id="nav-complaint">File Complaint</a>
+  </div>
+  <div class="nav-user" id="nav-user-section" style="display:none;">
+    <span class="nav-user-name" id="nav-user-name">Welcome</span>
+    <button class="btn-signout" onclick="signOut()">Sign Out</button>
+  </div>
+</nav>
+
+<div class="fyl-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-inner" style="max-width:1200px;">
+      <p class="page-header-tag">Legal Library</p>
+      <h1>Find Your Law</h1>
+      <p>Describe your issue or select a category — we'll match you with the right law, your rights, and where to file.</p>
+    </div>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div class="fyl-search-bar">
+    <div class="fyl-search-inner">
+      <div class="fyl-search-input-wrap">
+        <i data-feather="search" style="width:16px;height:16px;color:var(--grey-400);flex-shrink:0;"></i>
+        <input
+          type="text"
+          id="fyl-search-input"
+          placeholder="Describe your issue or search by keyword…"
+          oninput="filterFYL()"
+        />
+      </div>
+      <select class="fyl-filter-select" id="fyl-category-select" onchange="filterFYL()">
+        <option value="">All Categories</option>
+        <option value="Civil Litigation">⚖️ Civil Litigation</option>
+        <option value="Criminal Matters">🔒 Criminal Matters</option>
+        <option value="Cyber Crime & Online Fraud">💻 Cyber Crime & Online Fraud</option>
+        <option value="Consumer Complaints">🛒 Consumer Complaints</option>
+        <option value="Family & Divorce Matters">👨‍👩‍👧 Family & Divorce Matters</option>
+        <option value="Property & Land Disputes">🏠 Property & Land Disputes</option>
+        <option value="Cheque Bounce Cases">📝 Cheque Bounce Cases (NI Act)</option>
+        <option value="Employment & Labour Disputes">👷 Employment & Labour Disputes</option>
+        <option value="Corporate & Business Disputes">🏢 Corporate & Business Disputes</option>
+        <option value="Contract Drafting & Review">📄 Contract Drafting & Review</option>
+        <option value="Money Recovery Cases">💰 Money Recovery Cases</option>
+        <option value="Legal Notices">📬 Legal Notices</option>
+        <option value="Documentation & Registration">🗂️ Documentation & Registration</option>
+        <option value="Arbitration & Mediation">🤝 Arbitration & Mediation</option>
+        <option value="Other Legal Matters">🔍 Other Legal Matters</option>
+      </select>
+      <button class="hero-search-btn" onclick="filterFYL()" style="padding:0.625rem 1.25rem;font-size:0.875rem;">
+        Search
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="fyl-main">
+
+    <!-- RECOMMENDATION ZONE (populated by JS) -->
+    <div id="recommendation-zone" class="recommendation-zone"></div>
+
+    <!-- ACTS GRID SECTION -->
+    <div id="acts-grid-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+        <h2 style="font-family:var(--font-display);font-size:1.3rem;color:var(--navy);font-weight:700;">
+          Applicable Laws &amp; Acts
+        </h2>
+        <span style="font-size:0.8rem;color:var(--text-muted);">Click any card to read the full act</span>
+      </div>
+      <div id="acts-grid" class="acts-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ACT DETAIL PANEL (shown when user clicks "Read Full Act") -->
+    <div id="act-detail-panel" class="act-detail-panel" style="display:none;">
+      <button class="btn-close-detail" onclick="closeActDetail()">← Back to All Laws</button>
+      <div style="display:grid;grid-template-columns:320px 1fr;min-height:600px;" id="explorer-detail-inner">
+        <!-- Sidebar -->
+        <div class="baraat-explorer-sidebar" style="border-right:1px solid var(--border);">
+          <div class="sidebar-search-box">
+            <input type="text" class="form-input" id="explorer-search-input"
+              placeholder="🔍 Search sections..."
+              style="margin-bottom:0.75rem;"
+              oninput="filterExplorer(this.value, document.getElementById('explorer-category-select')?.value || '')" />
+          </div>
+          <div class="sidebar-list-container" id="sidebar-acts-list"></div>
+        </div>
+        <!-- Main pane -->
+        <div class="baraat-explorer-main" id="explorer-main-pane">
+          <div class="act-detail-placeholder">
+            <div class="act-detail-placeholder-icon">⚖️</div>
+            <h3>Select a Bare Act from the list</h3>
+            <p>Choose any act on the left to explore its chapters, legal definitions, and apply templates to your complaint.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:4rem;">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+            <span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File My Complaint</span>
+          </div>
+          <p>Empowering citizens with legal knowledge and guided complaint filing.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a onclick="showPage('home')">Home</a></li>
+            <li><a onclick="showPage('find-your-law')">Find Your Law</a></li>
+            <li><a onclick="showPage('about')">About Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>File</h4>
+          <ul>
+            <li><a onclick="requireAuth('complaint')">File Complaint</a></li>
+            <li><a onclick="showPage('about')">About Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a>📧 info@filemycomplaint.in</a></li>
+            <li><a>📞 +91 98765 43210</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2024 File My Complaint. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init({ duration: 800, once: true }); feather.replace();</script>
+</body>
+</html>

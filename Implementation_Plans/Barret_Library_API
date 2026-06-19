@@ -1,0 +1,91 @@
+# Implementation Plan - Rich Bare Acts Library & Complaint Form Integration
+
+We will upgrade the **Baraat (Bare Act) Library** from a basic list of static cards into a premium, interactive **Bare Acts Explorer**. We will also integrate a legal API information panel to list available open-source APIs, and implement an **"Apply to Complaint"** flow that pre-fills the complaint form according to the chosen act/section.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> Since public, CORS-enabled APIs for *all* Indian central and state laws do not exist for free without authorization keys (e.g., Indian Kanoon requires registration and payment for commercial queries), we will implement a dual-engine architecture:
+> 1. A rich, high-fidelity local database of major Bare Acts (IPC, Consumer Protection Act, RTI, etc.) with chapters, sections, and descriptions that is fully searchable and responsive.
+> 2. An **Open Source Legal API Dashboard** inside the library that showcases available APIs (Indian Kanoon, eCourts India, CivicTech GitHub datasets) with endpoint descriptions, and provides a mock request viewer demonstrating how developers can integrate them.
+> Please review and confirm if this meets your requirements for "where are all api we can get".
+
+---
+
+
+//# Implementation Plan - Citizen-Centric Legal Library & Complaint Assistant
+
+We will transform the platform from a developer-focused, technical law database into a guided, citizen-centric legal assistant named **"File My Complaint"**. We will fix the homepage layout grid and build an issue matching recommendation engine, a guided step-by-step complaint wizard, a legal draft generator, simplified citizen rights guides, and move all technical API playgrounds to a separate developer page.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> - We will rename the "Baraat Library" in the navigation to **"Find Your Law"** and update the URL to point to a highly accessible legal explorer, focusing on summaries and citizen rights, with a collapsible tab for the raw acts.
+> - We will create a brand new file **[rights.html](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/rights.html)** containing interactive citizen guides (Online Shopping Fraud, Unpaid Salary, Cyber Scams, etc.).
+> - All Developer/API dashboards will be fully migrated into a new file **[developer.html](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/developer.html)**, which will only be accessible via a discrete text link in the page footers.
+> - On the homepage, we will restrict the Legal Expertise grid to precisely 3 columns in desktop view to resolve the visual layout asymmetry.
+> Please review and approve these plans.
+
+---
+
+## Proposed Changes
+
+### Core CSS
+#### [MODIFY] [style.css](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/style.css)
+- Restrict `.services-grid` to exactly `grid-template-columns: repeat(3, 1fr)` for viewports above 960px.
+- Add modern cards styling for Category grids and Issue Finder widgets.
+- Style the new step indicators, draft editor, and interactive guides on the new pages.
+
+### Core Logic
+#### [MODIFY] [script.js](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/script.js)
+- Build a keyword matching **Legal Recommendation Engine** (`analyzeCitizenIssue(text)`) that matches user descriptions to Categories, Laws, Authorities, and Templates.
+- Implement the state machine for the **6-Step Complaint Preparation Wizard** (Step 1: Select Type, Step 2: Details, Step 3: Evidence, Step 4: Laws, Step 5: Draft Preview & Edit, Step 6: Submit).
+- Develop `generateComplaintDraft()` to automatically format a formal legal notice based on user inputs.
+- Migrate developer mock API functions to `developer.html` console scopes.
+
+### Homepage Redesign
+#### [MODIFY] [index.html](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/index.html)
+- Integrate the prominent **Issue Finder search bar** under the Hero section.
+- Display a interactive Category grid (Consumer, Cyber, Banking, Employment, Property, Family, Domestic Violence, RTI, Other).
+- Fix the services grid to be symmetrical (3 in each row on desktop).
+- Align main navigation links (Home, Find Your Law, File Complaint, Know Your Rights, About Us).
+
+### Find Your Law (Baraat Library Upgrade)
+#### [MODIFY] [baraat.html](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/baraat.html)
+- Rename headers and title tags to "Find Your Law".
+- Change the default view to show a **Simplified Bare Act Library** (Act name, objective, layperson summaries, key citizen rights, and search).
+- Add a collapsible button or subtle tab to load the raw technical chapters and sections.
+- Update footer and navigation lists.
+
+### Guided Complaint Wizard
+#### [MODIFY] [complaint.html](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/complaint.html)
+- Fully refactor the complaint page to feature the **6-Step Complaint Preparation Wizard**.
+- Integrate a live **Draft Generator Preview panel** inside Step 5 with Copy, Edit, and print/download buttons.
+- Display contextual help cards telling the user what documents and laws are relevant based on their active selection.
+
+### New Modules
+#### [NEW] [rights.html](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/rights.html)
+A brand new citizen guide page displaying beautiful accordion panels detailing legal rights, what to do, correct filing authorities, and evidence lists for:
+- Online Shopping Fraud
+- Salary Not Paid
+- Bank Scams
+- Cyber Bullying
+- Defective Products
+
+#### [NEW] [developer.html](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/developer.html)
+A dedicated page containing the technical API descriptions, query dashboards, raw JSON viewers, and the test playground terminal.
+
+---
+
+## Verification Plan
+
+### Automated & Manual Testing
+- Check that `index.html` renders exactly 3 cards per row in the Practice Areas grid.
+- Test typing "I lost money to an online phishing email" in the homepage search bar. Verify it correctly recommends "Cyber Crime / Banking Fraud", suggests the "IT Act", lists required documents, and loads the wizard prefilled with templates.
+- Walk through the 6 Steps of the Complaint wizard and verify the live compilation of the draft.
+- Open [rights.html](file:///c:/Users/ohmpa/OneDrive/Desktop/file_my_complain/file-the-complaint/file-the-complaint/rights.html) and check citizen guides.
+- Verify that no technical API references appear in the user-facing header navigations.

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Portal — File My Complaint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon"></div>
+      <div class="nav-logo-text">
+        File My Complaint
+        <small>Legal Assistance Platform</small>
+      </div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a onclick="showPage('home')" id="nav-home">Home</a>
+      <a onclick="showPage('find-your-law')" id="nav-findlaw">Find Your Law</a>
+      <a onclick="showPage('about')" id="nav-about">About Us</a>
+      <a onclick="requireAuth('complaint')" class="nav-cta" id="nav-complaint">File Complaint</a>
+    </div>
+    <div class="nav-user" id="nav-user-section" style="display:none;">
+      <span class="nav-user-name" id="nav-user-name">Welcome</span>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="page active" id="page-developer">
+    <div style="padding-top:72px;min-height:100vh;background:var(--cream);">
+      <div class="page-header" data-aos="fade-down">
+        <div class="page-header-inner">
+          <p class="page-header-tag">Developer Portal</p>
+          <h1>API Resources &amp; Explorer</h1>
+          <p>Access public legal APIs, query raw bare acts datasets, and run mock requests in our playground environment.</p>
+        </div>
+      </div>
+
+      <!-- Developer Warning Banner -->
+      <div class="dev-warning-banner" data-aos="fade-up" style="background: rgba(184,149,90,0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 1rem 1.5rem; max-width: 1200px; margin: 1.5rem auto 0; display: flex; align-items: center; gap: 1rem;">
+        <span style="font-size: 1.5rem;">⚠️</span>
+        <div>
+          <div style="font-weight: 600; color: var(--navy);">Technical Area Only</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            This page provides API references and raw database access for integration partners. If you want to submit a legal complaint, please go to the 
+            <a onclick="requireAuth('complaint')" style="color: var(--gold-dark); font-weight: 600; cursor: pointer; text-decoration: underline;">Complaint Wizard</a>.
+          </div>
+        </div>
+      </div>
+
+      <div class="baraat-container" style="margin-top: 1.5rem;">
+        <div class="baraat-tabs" data-aos="fade-up">
+          <button class="baraat-tab-btn active" id="tab-btn-explorer" onclick="switchBaraatTab('explorer')">📖 Bare Act Database Explorer</button>
+          <button class="baraat-tab-btn" id="tab-btn-apis" onclick="switchBaraatTab('apis')">💻 Public Legal APIs</button>
+        </div>
+
+        <!-- TAB 1: BARE ACT EXPLORER -->
+        <div class="baraat-tab-content active" id="tab-content-explorer" data-aos="fade-up">
+          <div class="baraat-explorer">
+            <!-- SIDEBAR ACTS LIST -->
+            <div class="baraat-explorer-sidebar">
+              <div class="sidebar-search-box">
+                <input type="text" class="form-input" id="explorer-search-input" placeholder="🔍 Search acts or keywords..." style="margin-bottom:0.75rem;" oninput="filterExplorer(this.value, document.getElementById('explorer-category-select').value)"/>
+                <select class="form-input" id="explorer-category-select" onchange="filterExplorer(document.getElementById('explorer-search-input').value, this.value)">
+                  <option value="">All Categories</option>
+                  <option value="Consumer Complaint">Consumer Complaint</option>
+                  <option value="Criminal Matter">Criminal Matter</option>
+                  <option value="RTI Related">RTI Related</option>
+                  <option value="Cyber Crime">Cyber Crime</option>
+                  <option value="Banking Fraud">Banking Fraud</option>
+                  <option value="Employment Issue">Employment Issue</option>
+                </select>
+              </div>
+              <div class="sidebar-list-container" id="sidebar-acts-list">
+                <!-- Dynamic Act List loaded by JS -->
+              </div>
+            </div>
+
+            <!-- MAIN DETAIL WINDOW -->
+            <div class="baraat-explorer-main" id="explorer-main-pane">
+              <div class="act-detail-placeholder">
+                <div class="act-detail-placeholder-icon">⚖️</div>
+                <h3>Select a Bare Act from the library</h3>
+                <p>Choose any Bare Act on the left to explore its chapters, legal definitions, section objectives, and easily apply templates to our complaint form.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: LEGAL API RESOURCES -->
+        <div class="baraat-tab-content" id="tab-content-apis" data-aos="fade-up">
+          <div class="api-dashboard-grid">
+            <!-- LEFT PANEL: LIST OF APIs -->
+            <div>
+              <h2 style="font-family:var(--font-display);color:var(--navy);font-size:1.5rem;margin-bottom:0.5rem;font-weight:700;">Public Legal APIs</h2>
+              <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:1.5rem;line-height:1.5;">
+                The following official and open-source APIs provide structured case records, statutes, acts, and judgements. Programmatic queries allow automated legal workflows and intelligent citizen-advocate connections.
+              </p>
+              <div id="api-list-container">
+                <!-- Dynamic API Info Cards loaded by JS -->
+              </div>
+            </div>
+
+            <!-- RIGHT PANEL: API PLAYGROUND -->
+            <div class="api-playground">
+              <h2 style="font-family:var(--font-display);color:var(--navy);font-size:1.4rem;margin-bottom:0.5rem;font-weight:700;">🔌 Legal API Playground</h2>
+              <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:1.5rem;line-height:1.5;">
+                Test queries against our legal API search indexes. The playground simulates an asynchronous GET fetch to search and parse matched bare acts and sections.
+              </p>
+
+              <div class="form-group">
+                <label class="form-label">Search Query Keyword</label>
+                <div style="display:flex;gap:0.75rem;">
+                  <input type="text" class="form-input" id="api-mock-query" value="Cheating" placeholder="Enter keyword (e.g. Wages, Consumer, RTI, Cheating)..." style="flex:1;"/>
+                  <button class="btn-primary" onclick="runMockAPIRequest()" style="padding:0.75rem 1.5rem;font-size:0.85rem;box-shadow:none; white-space: nowrap;">Send Request</button>
+                </div>
+              </div>
+
+              <label class="form-label" style="margin-top:1rem;">API RESPONSE JSON</label>
+              <pre class="api-code-response" id="api-mock-response">// Press 'Send Request' to query the legal API server...</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer data-aos="fade-up">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-display);font-size:16px;"></div>
+              <span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File My Complaint</span>
+            </div>
+            <p>Empowering citizens with legal knowledge and professional advocacy since 2010. Your rights matter — we make sure they are heard.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Services</h4>
+            <ul>
+              <li><a onclick="requireAuth('complaint')">File Complaint</a></li>
+              <li><a onclick="showPage('find-your-law')">Find Your Law</a></li>
+              <li><a onclick="showPage('about')">About Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <ul>
+              <li><a>Privacy Policy</a></li>
+              <li><a>Terms of Service</a></li>
+              <li><a>Disclaimer</a></li>
+              <li><a>Refund Policy</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <ul>
+              <li><a>📧 info@filemycomplaint.in</a></li>
+              <li><a>📞 +91 98765 43210</a></li>
+              <li><a>📍 District Court Road,<br/>Ahmedabad, GJ</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2024 File My Complaint. All rights reserved.</span>
+          <span style="font-family:var(--font-mono);">Payments secured by Razorpay</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- PDF MODAL -->
+  <div class="modal-overlay" id="pdf-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-title">Document Viewer</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="pdf-placeholder">
+          <div class="pdf-icon">📄</div>
+          <p><strong id="modal-doc-name">Document Name</strong></p>
+          <p>This document has been uploaded by the advocate. In the live version, it will render here using a PDF viewer.</p>
+          <br/>
+          <button class="btn-primary" style="font-size:0.85rem;padding:0.6rem 1.5rem;">⬇️ Download PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({duration: 800, once: true}); feather.replace();</script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — File My Complaint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-logo" onclick="window.location.href='index.html'"
+      style="cursor:pointer;display:flex;align-items:center;gap:10px;">
+      <div class="nav-logo-icon"></div>
+      <div class="nav-logo-text">
+        File My Complaint
+        <small>Legal Advocates</small>
+      </div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html" id="nav-home">Home</a>
+      <a href="about.html" id="nav-about">About Us</a>
+      <a href="complaint.html" class="nav-cta" id="nav-complaint">File Complaint</a>
+    </div>
+    <div class="nav-user" id="nav-user-section" style="display:none;">
+      <span class="nav-user-name" id="nav-user-name">Welcome</span>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- MAIN AUTH BODY -->
+  <div class="page active" id="page-admin-login">
+    <div class="auth-page">
+      <div class="auth-left" data-aos="fade-right">
+        <div class="auth-left-content">
+          <div class="hero-badge" style="margin-bottom:1.5rem; border-color: var(--gold); color: var(--gold-light);">
+            Advocate Portal</div>
+          <h2>Control Panel<br /><em>Sign In</em></h2>
+          <p>Access client submissions, update status, document advocate remarks, manage registered users, and generate
+            analytics reports.</p>
+          <ul class="auth-features">
+            <li>Manage all user complaints</li>
+            <li>Add legal remarks & update statuses</li>
+            <li>Activate or block users</li>
+            <li>Export Excel & PDF reports</li>
+          </ul>
+        </div>
+      </div>
+      <div class="auth-right" data-aos="fade-left">
+        <h2 class="auth-form-title">Admin Login</h2>
+        <p class="auth-form-sub" style="color:var(--gold-dark); font-weight:600;">Authorized Legal Representatives Only
+        </p>
+        <div class="alert error" id="admin-login-error" style="display:none;"></div>
+
+        <div class="form-group">
+          <label class="form-label">Admin Email <span class="required">*</span></label>
+          <input type="email" class="form-input" id="admin-email" placeholder="admin@filethecomplaint.in" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password <span class="required">*</span></label>
+          <input type="password" class="form-input" id="admin-pass" placeholder="••••••••" />
+        </div>
+        <button class="btn-form gold" onclick="handleAdminLogin()" id="admin-login-btn">Secure Login →</button>
+
+        <div
+          style="text-align:center; margin-top:2rem; padding: 1rem; background: var(--cream-dark); border-radius:8px; border: 1px dashed var(--border);">
+          <small style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom: 0.25rem;">
+            🔑 <strong>Demo Credentials</strong>
+          </small>
+          <code
+            style="font-size: 0.8rem; background: var(--white); padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid var(--border); display:inline-block; margin-bottom: 0.25rem;">
+            admin@filethecomplaint.in
+          </code>
+          <code
+            style="font-size: 0.8rem; background: var(--white); padding: 0.2rem 0.5rem; border-radius: 4px; border: 1px solid var(--border); display:inline-block;">
+            admin123
+          </code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    feather.replace();
+
+    // Clear user-panel session so a regular login does not leak into admin UI
+    const existingUser = getStoredUser();
+    if (existingUser && existingUser.role !== 'admin') {
+      clearAuth();
+    }
+
+    // Already logged in as admin
+    const adminUser = getStoredUser();
+    if (adminUser && getToken() && adminUser.role === 'admin') {
+      window.location.href = 'admin.html';
+    }
+
+    async function handleAdminLogin() {
+      const email = document.getElementById('admin-email').value.trim().toLowerCase();
+      const pass = document.getElementById('admin-pass').value;
+      const errorDiv = document.getElementById('admin-login-error');
+      const btn = document.getElementById('admin-login-btn');
+
+      errorDiv.style.display = 'none';
+      if (!email || !pass) {
+        errorDiv.textContent = 'Please fill in both email and password.';
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      if (btn) { btn.disabled = true; btn.textContent = 'Authenticating...'; }
+
+      try {
+        const data = await api.login({ email, password: pass });
+        if (data.user.role !== 'admin') {
+          clearAuth();
+          errorDiv.textContent = 'Access Denied. This account does not have administrator privileges.';
+          errorDiv.style.display = 'block';
+          return;
+        }
+        setAuth(data.token, data.user);
+        showToast('Admin authenticated successfully! Loading Dashboard...', 'success');
+        setTimeout(() => { window.location.href = 'admin.html'; }, 800);
+      } catch (error) {
+        errorDiv.textContent = error.message || 'Invalid credentials. Please try again.';
+        errorDiv.style.display = 'block';
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Secure Login →'; }
+      }
+    }
+
+    // Trigger on enter key
+    document.getElementById('admin-pass').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleAdminLogin();
+    });
+  </script>
+</body>
+
+</html>

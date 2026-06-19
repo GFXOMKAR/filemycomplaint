@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — File My Complaint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon"></div>
+      <div class="nav-logo-text">
+        File My Complaint
+        <small>Legal Assistance Platform</small>
+      </div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a onclick="showPage('home')" id="nav-home">Home</a>
+      <a onclick="showPage('about')" id="nav-about">About Us</a>
+      <a onclick="requireAuth('complaint')" class="nav-cta" id="nav-complaint">File Complaint</a>
+    </div>
+    <div class="nav-user" id="nav-user-section" style="display:none;">
+      <span class="nav-user-name" id="nav-user-name">Welcome</span>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="page active" id="page-signup">
+    <div class="auth-page">
+      <div class="auth-left" data-aos="fade-right">
+        <div class="auth-left-content">
+          <div class="hero-badge" style="margin-bottom:1.5rem;">File My Complaint</div>
+          <h2>Join Our<br /><em>Legal</em> Network</h2>
+          <p>Create your account to access our full suite of legal services and file your complaints securely.</p>
+          <ul class="auth-features">
+            <li>Secure and encrypted personal data</li>
+            <li>File unlimited complaints</li>
+            <li>Track complaint status in real-time</li>
+            <li>Access legal database documents</li>
+            <li>Direct advocate communication</li>
+          </ul>
+        </div>
+      </div>
+      <div class="auth-right" data-aos="fade-left">
+        <h2 class="auth-form-title">Create Account</h2>
+        <p class="auth-form-sub">Already registered? <a onclick="showPage('login')">Sign in here</a></p>
+        <div class="alert error" id="signup-error" style="display:none;"></div>
+        <div class="alert success" id="signup-success" style="display:none;"></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name <span class="required">*</span></label>
+            <input type="text" class="form-input" id="signup-fname" placeholder="Rahul" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name <span class="required">*</span></label>
+            <input type="text" class="form-input" id="signup-lname" placeholder="Sharma" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address <span class="required">*</span></label>
+          <input type="email" class="form-input" id="signup-email" placeholder="rahul@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mobile Number <span class="required">*</span></label>
+          <input type="tel" class="form-input" id="signup-phone" placeholder="+91 98765 43210" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">City / District <span class="required">*</span></label>
+          <input type="text" class="form-input" id="signup-city" placeholder="Ahmedabad" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password <span class="required">*</span></label>
+          <input type="password" class="form-input" id="signup-pass" placeholder="Min. 8 characters" />
+          <p class="form-hint">Use a strong password with letters, numbers, and symbols.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password <span class="required">*</span></label>
+          <input type="password" class="form-input" id="signup-pass2" placeholder="Repeat password" />
+        </div>
+        <button class="btn-form gold" onclick="handleSignup()" id="signup-btn">Create My Account →</button>
+        <div class="form-divider">or</div>
+        <button class="btn-form" onclick="showPage('home')"
+          style="background:transparent;color:var(--text-muted);border:1.5px solid var(--border);">Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 800, once: true }); feather.replace();</script>
+</body>
+
+</html>

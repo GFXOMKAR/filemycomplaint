@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — File My Complaint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Route guard — verify admin role from server, not stale localStorage
+    (async function () {
+      const token = getToken();
+      if (!token) {
+        window.location.replace('admin-login.html');
+        return;
+      }
+
+      try {
+        const data = await api.getMe();
+        if (data.user.role !== 'admin') {
+          clearAuth();
+          window.location.replace('admin-login.html');
+          return;
+        }
+        setAuth(token, data.user);
+      } catch {
+        clearAuth();
+        window.location.replace('admin-login.html');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">⚖️</div>
+        <div class="sidebar-logo-text">
+          File Complaint
+          <small>Admin Panel</small>
+        </div>
+      </div>
+      <div class="sidebar-section-label">Case Manager</div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-item active" id="menu-dashboard" onclick="switchTab('dashboard')">
+          <a><i data-feather="grid"></i> Dashboard</a>
+        </li>
+        <li class="sidebar-item" id="menu-complaints" onclick="switchTab('complaints')">
+          <a><i data-feather="file-text"></i> Complaints</a>
+        </li>
+        <li class="sidebar-item" id="menu-users" onclick="switchTab('users')">
+          <a><i data-feather="users"></i> User Management</a>
+        </li>
+        <li class="sidebar-item" id="menu-reports" onclick="switchTab('reports')">
+          <a><i data-feather="bar-chart-2"></i> Reports</a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="sidebar-status-dot"></div>
+        <div class="sidebar-footer-text">
+          <strong>System Status: Active</strong><br>
+          v1.0.0 · Secure Client
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN PANELS -->
+    <main class="admin-main">
+      <!-- NAVBAR -->
+      <nav class="admin-navbar">
+        <div class="navbar-left">
+          <h1 id="panel-title">Dashboard Summary</h1>
+        </div>
+        <div class="navbar-right">
+
+          <!-- Notifications Bell -->
+          <button class="notif-bell" onclick="toggleNotifDropdown()" aria-label="Notifications">
+            <i data-feather="bell"></i>
+            <span class="notif-badge" id="notif-badge-count" style="display:none;">0</span>
+
+            <div class="notif-dropdown" id="notif-dropdown-box" onclick="event.stopPropagation()">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <span style="font-size:0.75rem; color:var(--primary-brand); cursor:pointer;"
+                  onclick="markAllNotificationsRead()">Mark all read</span>
+              </div>
+              <ul class="notif-list-items" id="notif-list-items">
+                <li style="padding:1.5rem; text-align:center; color:var(--admin-text-muted-light); font-size:0.8rem;">No
+                  new notifications</li>
+              </ul>
+            </div>
+          </button>
+
+          <!-- User Profile -->
+          <div class="navbar-user-profile">
+            <div class="profile-avatar">AD</div>
+            <div class="profile-info">
+              <div class="profile-name" id="admin-name">Admin Name</div>
+              <div class="profile-role">Senior Legal Counsel</div>
+            </div>
+            <button class="btn-signout" onclick="adminSignOut()"
+              style="margin-left: 1rem; padding: 0.35rem 0.75rem; font-size: 0.75rem; border-color:var(--admin-border-light); color:var(--admin-text-light);">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- TAB PANEL CONTENT -->
+      <div class="admin-content">
+
+        <!-- TAB: DASHBOARD -->
+        <div class="admin-tab-panel active" id="tab-dashboard">
+          <!-- Stats Cards -->
+          <div class="stats-grid" id="stats-grid-container">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Charts -->
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <h2>Monthly Complaints Trend</h2>
+              </div>
+              <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-card-header">
+                <h2>Category Distribution</h2>
+              </div>
+              <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Complaints Table -->
+          <div class="table-card">
+            <h2 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem;">Recent Case Filings</h2>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Case ID</th>
+                    <th>User Name</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-complaints-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: COMPLAINTS -->
+        <div class="admin-tab-panel" id="tab-complaints">
+          <div class="table-card">
+            <div class="table-header-tools">
+              <div class="table-tools-left">
+                <div class="search-input-wrapper">
+                  <i data-feather="search" class="search-icon-inside" style="width:16px; height:16px;"></i>
+                  <input type="text" id="complaint-search-box" placeholder="Search ID, name, email, title..."
+                    oninput="handleComplaintFilterChange()" />
+                </div>
+                <select class="filter-select" id="complaint-status-filter" onchange="handleComplaintFilterChange()">
+                  <option value="">All Statuses</option>
+                  <option value="received">Received / New</option>
+                  <option value="pending">Pending</option>
+                  <option value="solved">Solved</option>
+                </select>
+                <select class="sort-select" id="complaint-date-sort" onchange="handleComplaintFilterChange()">
+                  <option value="desc">Newest First</option>
+                  <option value="asc">Oldest First</option>
+                </select>
+              </div>
+              <button class="btn-page"
+                style="border-color:var(--gold); color:var(--gold); display:flex; align-items:center; gap:0.4rem;"
+                onclick="openNewComplaintModal()">
+                <i data-feather="plus" style="width:16px; height:16px;"></i> New Case Filing
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Case ID</th>
+                    <th>User Name</th>
+                    <th>Mobile</th>
+                    <th>Category</th>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="complaints-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination-container">
+              <span id="complaints-pagination-info">Showing 0 to 0 of 0 entries</span>
+              <div class="pagination-btn-group">
+                <button class="btn-page" id="btn-complaints-prev" onclick="changeComplaintsPage(-1)">Previous</button>
+                <button class="btn-page" id="btn-complaints-next" onclick="changeComplaintsPage(1)">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: USER MANAGEMENT -->
+        <div class="admin-tab-panel" id="tab-users">
+          <div class="table-card">
+            <div class="table-header-tools">
+              <div class="table-tools-left">
+                <div class="search-input-wrapper">
+                  <i data-feather="search" class="search-icon-inside" style="width:16px; height:16px;"></i>
+                  <input type="text" id="user-search-box" placeholder="Search name, email, phone..."
+                    oninput="handleUserFilterChange()" />
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Mobile</th>
+                    <th>City / District</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination-container">
+              <span id="users-pagination-info">Showing 0 to 0 of 0 entries</span>
+              <div class="pagination-btn-group">
+                <button class="btn-page" id="btn-users-prev" onclick="changeUsersPage(-1)">Previous</button>
+                <button class="btn-page" id="btn-users-next" onclick="changeUsersPage(1)">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: REPORTS -->
+        <div class="admin-tab-panel" id="tab-reports">
+          <div class="reports-action-grid">
+            <div class="report-action-card" onclick="exportCSVReport()">
+              <div class="report-action-icon"><i data-feather="file-text"></i></div>
+              <div class="report-action-text">
+                <h3>Export Database</h3>
+                <p>Export all case records to Excel (CSV) format</p>
+              </div>
+            </div>
+            <div class="report-action-card" onclick="triggerPDFReport()">
+              <div class="report-action-icon"><i data-feather="printer"></i></div>
+              <div class="report-action-text">
+                <h3>Print Records</h3>
+                <p>Generate high-quality printable PDF of active complaints summary</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-card" id="printable-report-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+              <h2 id="report-title">Active Complaints Summary Report</h2>
+              <span id="report-date"
+                style="font-family:var(--font-mono); font-size:0.8rem; color:var(--admin-text-muted-light);">Generated:
+                12 June 2026</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Total Received</th>
+                    <th>Pending</th>
+                    <th>Solved</th>
+                    <th>Success Rate</th>
+                  </tr>
+                </thead>
+                <tbody id="reports-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- COMPLAINT DETAILS MODAL -->
+  <div class="modal-overlay" id="complaint-details-modal">
+    <div class="modal-box" style="max-width:960px;">
+      <div class="modal-header">
+        <h3 id="detail-modal-title">Case Details</h3>
+        <button class="modal-close" onclick="closeComplaintDetailsModal()">×</button>
+      </div>
+      <div class="modal-body" id="detail-modal-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW COMPLAINT / MANUAL FILING MODAL -->
+  <div class="modal-overlay" id="new-complaint-modal">
+    <div class="modal-box" style="max-width:650px;">
+      <div class="modal-header">
+        <h3>New Case Filing (Manual Entry)</h3>
+        <button class="modal-close" onclick="closeNewComplaintModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="new-complaint-form" onsubmit="saveNewComplaint(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Client Name <span style="color:var(--danger);">*</span></label>
+              <input type="text" class="form-input" id="new-case-name" placeholder="John Doe" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mobile Number <span style="color:var(--danger);">*</span></label>
+              <input type="tel" class="form-input" id="new-case-phone" placeholder="9876543210" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Client Email <span style="color:var(--danger);">*</span></label>
+              <input type="email" class="form-input" id="new-case-email" placeholder="john@example.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Service Category <span style="color:var(--danger);">*</span></label>
+              <select class="form-input" id="new-case-category" required>
+                <!-- Generated dynamically -->
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">City / District <span style="color:var(--danger);">*</span></label>
+              <input type="text" class="form-input" id="new-case-city" placeholder="Ahmedabad" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">State <span style="color:var(--danger);">*</span></label>
+              <select class="form-input" id="new-case-state" required>
+                <option value="">Select State</option>
+                <option>Gujarat</option>
+                <option>Maharashtra</option>
+                <option>Rajasthan</option>
+                <option>Delhi</option>
+                <option>Uttar Pradesh</option>
+                <option>Madhya Pradesh</option>
+                <option>Karnataka</option>
+                <option>Tamil Nadu</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Filing Against <span style="color:var(--danger);">*</span></label>
+              <input type="text" class="form-input" id="new-case-against" placeholder="Disputed Entity Name" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Incident Date <span style="color:var(--danger);">*</span></label>
+              <input type="date" class="form-input" id="new-case-date" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Incident Description <span style="color:var(--danger);">*</span></label>
+            <textarea class="form-input" id="new-case-desc" rows="5" placeholder="Describe the grievance in detail..."
+              required></textarea>
+          </div>
+          <button type="submit" class="btn-form-gold" style="width:100%; margin-top:1rem;">Submit New Case File</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- USER EDIT MODAL -->
+  <div class="modal-overlay" id="user-edit-modal">
+    <div class="modal-box" style="max-width:500px;">
+      <div class="modal-header">
+        <h3>Edit User Information</h3>
+        <button class="modal-close" onclick="closeUserEditModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-user-form" onsubmit="saveUserDetails(event)">
+          <input type="hidden" id="edit-user-id" />
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-input" id="edit-user-fname" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-input" id="edit-user-lname" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mobile Number</label>
+            <input type="tel" class="form-input" id="edit-user-phone" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">City / District</label>
+            <input type="text" class="form-input" id="edit-user-city" required />
+          </div>
+          <button type="submit" class="btn-form gold" style="width:100%; margin-top:1rem;">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ADMIN SPA JAVASCRIPT LOGIC -->
+  <script src="admin-data.js"></script>
+  <script>
+    feather.replace();
+
+    // Tabs Manager
+    const tabTitles = {
+      'dashboard': 'Dashboard Summary',
+      'complaints': 'Manage Complaints',
+      'users': 'User Management',
+      'reports': 'Reports & Analytics'
+    };
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+      document.querySelectorAll('.admin-tab-panel').forEach(panel => panel.classList.remove('active'));
+
+      const selectedMenu = document.getElementById(`menu-${tabName}`);
+      const selectedPanel = document.getElementById(`tab-${tabName}`);
+
+      if (selectedMenu) selectedMenu.classList.add('active');
+      if (selectedPanel) selectedPanel.classList.add('active');
+
+      document.getElementById('panel-title').textContent = tabTitles[tabName] || 'Dashboard';
+
+      // Auto-reload data on tab switch
+      loadData();
+    }
+
+    // Load Data & Render Dashboards
+    let monthlyTrendChart = null;
+    let categoryPieChart = null;
+    let currentViewingCaseId = null;
+    let isEditingModalDraft = false;
+
+    // Charts rendering
+    function renderCharts(complaints) {
+      // 1. Monthly Complaints Trend logic
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const currentYear = new Date().getFullYear();
+      const monthlyCounts = Array(12).fill(0);
+
+      complaints.forEach(c => {
+        const d = new Date(c.submittedAt);
+        if (d.getFullYear() === currentYear) {
+          monthlyCounts[d.getMonth()]++;
+        }
+      });
+
+      if (monthlyTrendChart) monthlyTrendChart.destroy();
+      const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
+      monthlyTrendChart = new Chart(ctxMonthly, {
+        type: 'line',
+        data: {
+          labels: months,
+          datasets: [{
+            label: 'Filings',
+            data: monthlyCounts,
+            borderColor: '#A38052',
+            backgroundColor: 'rgba(163, 128, 82, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0 }
+            }
+          }
+        }
+      });
+
+      // 2. Category distribution pie logic
+      const categories = {};
+      complaints.forEach(c => {
+        const cat = c.category || 'General';
+        categories[cat] = (categories[cat] || 0) + 1;
+      });
+
+      const catLabels = Object.keys(categories);
+      const catData = Object.values(categories);
+      const catColors = [
+        '#0B192C', '#1E293B', '#A38052', '#334155', '#D4B28A',
+        '#64748B', '#7C5F3A', '#94A3B8', '#CBD5E1', '#E2E8F0'
+      ];
+
+      if (categoryPieChart) categoryPieChart.destroy();
+      const ctxCat = document.getElementById('categoryChart').getContext('2d');
+      categoryPieChart = new Chart(ctxCat, {
+        type: 'doughnut',
+        data: {
+          labels: catLabels.length > 0 ? catLabels : ['No Cases'],
+          datasets: [{
+            data: catData.length > 0 ? catData : [1],
+            backgroundColor: catLabels.length > 0 ? catColors.slice(0, catLabels.length) : ['#E2E8F0'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }
+        }
+      });
+    }
+
+    // Complaints Tab Logic
+    function handleComplaintFilterChange() {
+      complaintsCurrentPage = 1;
+      renderComplaintsList();
+    }
+
+    function changeComplaintsPage(dir) {
+      complaintsCurrentPage += dir;
+      renderComplaintsList();
+    }
+
+    // Detail Modal Handlers
+    function generateComplaintDraft(complaint, template) {
+      if (!template) return '';
+      let draft = template;
+
+      // Try to find pecuniary value/dispute amount in description
+      let disputeValue = "[Disputed Amount]";
+      const amountMatch = (complaint.issueDescription || '').match(/(?:Rs\.?|INR|₹)\s*(\d+(?:\s*,\s*\d+)*)/i);
+      if (amountMatch) {
+        disputeValue = amountMatch[0];
+      }
+
+      draft = draft.replace(/\[Value\]/g, disputeValue);
+      draft = draft.replace(/\[Amount\]/g, disputeValue);
+      draft = draft.replace(/\[Date\]/g, complaint.date || new Date().toLocaleDateString('en-IN'));
+      draft = draft.replace(/\[Your Name\]/g, complaint.name);
+      draft = draft.replace(/\[Name\]/g, complaint.name);
+      draft = draft.replace(/\[Your Name, Address, Phone\]/g, `${complaint.name}, ${complaint.city || ''}, ${complaint.state || ''}, Phone: ${complaint.phone || ''}`);
+      draft = draft.replace(/\[Your Name, Mobile, Address\]/g, `${complaint.name}, Phone: ${complaint.phone || ''}, Address: ${complaint.city || ''}, ${complaint.state || ''}`);
+      draft = draft.replace(/\[Complainant Name\]/g, complaint.name);
+      draft = draft.replace(/\[APPLICANT\]/g, complaint.name);
+      draft = draft.replace(/\[PETITIONER\]/g, complaint.name);
+      draft = draft.replace(/\[PLAINTIFF\]/g, complaint.name);
+      draft = draft.replace(/\[Accused Name \/ Company\]/g, complaint.against);
+      draft = draft.replace(/\[Employer Name\]/g, complaint.against);
+      draft = draft.replace(/\[Tenant Name\]/g, complaint.against);
+      draft = draft.replace(/\[Drawer Name\]/g, complaint.against);
+      draft = draft.replace(/\[Co-Partners\]/g, complaint.against);
+      draft = draft.replace(/\[Respondent Name\]/g, complaint.against);
+      draft = draft.replace(/\[RESPONDENT\]/g, complaint.against);
+      draft = draft.replace(/\[DEFENDANT\]/g, complaint.against);
+      draft = draft.replace(/\[Police Station Name\]/g, `${complaint.city || 'Local'} Police Station`);
+      draft = draft.replace(/\[Describe what went wrong\]/g, complaint.issueDescription || '');
+      draft = draft.replace(/\[STATEMENT OF FACTS\]/g, complaint.issueDescription || '');
+      draft = draft.replace(/\[FACTS\]/g, complaint.issueDescription || '');
+
+      return draft;
+    }
+
+    function openComplaintDetailsModal(caseId) {
+      const complaint = adminComplaintsCache.find(c => c.caseId === caseId);
+      if (!complaint) return;
+
+      currentViewingCaseId = caseId;
+      isEditingModalDraft = false;
+      document.getElementById('detail-modal-title').textContent = `Case Details: ${complaint.caseId}`;
+
+      const docsHtml = complaint.files && complaint.files.length > 0
+        ? complaint.files.map(f => `
+            <a href="${f.data}" download="${f.name}" class="document-chip">
+              📎 ${f.name} (${Math.round(f.size / 1024)} KB)
+            </a>
+          `).join('')
+        : '<p style="color:var(--text-muted); font-size:0.85rem;">No files uploaded.</p>';
+
+      const modalBody = document.getElementById('detail-modal-body');
+
+      const statusOptions = ['Received', 'Pending', 'Solved'].map(opt => `
+        <option value="${opt}" ${opt.toLowerCase() === (complaint.status || 'Received').toLowerCase() ? 'selected' : ''}>${opt}</option>
+      `).join('');
+
+      // Auto-generate or get draft
+      let draftText = complaint.draftText;
+      if (!draftText) {
+        const act = typeof bare_acts_db !== 'undefined' ? bare_acts_db.find(a => a.cat === complaint.category) : null;
+        const template = act && act.chapters && act.chapters[0] && act.chapters[0].sections && act.chapters[0].sections[0]
+          ? act.chapters[0].sections[0].complaintTemplate
+          : `TO,\nTHE COMPETENT COURT / AUTHORITY,\n\nSUBJECT: Legal Complaint regarding ${complaint.category}.\n\n1. PLAINTIFF/COMPLAINANT:\nName: [Name]\nAddress: [Your Name, Address, Phone]\n\n2. RESPONDENT/DEFENDANT:\nName: [Accused Name / Company]\n\n3. FACTS:\n[Describe what went wrong]\n\n4. PRAYER:\nGrant relief as deemed fit under law.\n\nDate: [Date]\nComplainant.`;
+
+        draftText = generateComplaintDraft(complaint, template);
+
+        const idx = adminComplaintsCache.findIndex(c => c.caseId === caseId);
+        if (idx !== -1) {
+          adminComplaintsCache[idx].draftText = draftText;
+          api.updateComplaint(caseId, { draftText }).catch(() => {});
+        }
+      }
+
+      // Generate matching laws HTML
+      const act = typeof bare_acts_db !== 'undefined' ? bare_acts_db.find(a => a.cat === complaint.category) : null;
+      let lawsHtml = '';
+      if (act) {
+        const section = act.chapters[0].sections[0];
+        lawsHtml = `
+          <div class="law-analysis-box">
+            <h4>⚖️ Matching Law Found</h4>
+            <div style="font-weight:600; color:var(--text-primary); margin-bottom:0.25rem;">${act.title}</div>
+            <div style="font-size:0.8rem; color:var(--gold); font-weight:600; margin-bottom:0.75rem;">${section.num}: ${section.title}</div>
+            <p style="font-size:0.78rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.75rem; max-height:120px; overflow-y:auto; padding-right:0.25rem;">${section.text}</p>
+            <div style="display:grid; grid-template-columns:1fr; gap:0.4rem; border-top:1px solid rgba(255,255,255,0.06); padding-top:0.5rem; font-size:0.75rem;">
+              <div><strong style="color:var(--danger);">PENALTY:</strong> <span>${section.penalty}</span></div>
+              <div><strong style="color:var(--status-solved);">REMEDY:</strong> <span>${section.remedy}</span></div>
+            </div>
+          </div>
+        `;
+      } else {
+        lawsHtml = `
+          <div class="law-analysis-box" style="background:rgba(255,255,255,0.02); border-color:var(--admin-border-soft);">
+            <h4 style="color:var(--text-secondary);">⚖️ Generic Legal Guidelines</h4>
+            <p style="font-size:0.78rem; color:var(--text-secondary); line-height:1.45;">No specific bare act section mapped to this category in database. Review the facts manually and consult standard CPC/CrPC provisions.</p>
+          </div>
+        `;
+      }
+
+      modalBody.innerHTML = `
+        <div class="detail-grid">
+          <!-- Left Column: Case Information -->
+          <div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Client Name</label>
+                <div class="detail-value" style="font-weight:600; color:var(--text-primary);">${complaint.name}</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Case Category</label>
+                <div class="detail-value" style="color:var(--gold); font-weight:600;">${complaint.category}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Client Email</label>
+                <div class="detail-value" style="font-size:0.85rem;">${complaint.email}</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Client Mobile</label>
+                <div class="detail-value" style="font-size:0.85rem;">${complaint.phone}</div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City & State</label>
+                <div class="detail-value" style="font-size:0.85rem;">${complaint.city || 'N/A'}, ${complaint.state || 'N/A'}</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Incident Date</label>
+                <div class="detail-value" style="font-size:0.85rem;">${complaint.date || 'N/A'}</div>
+              </div>
+            </div>
+            <div class="detail-row">
+              <label class="form-label">Filing Against</label>
+              <div class="detail-value" style="font-weight:600; color:var(--text-primary);">${complaint.against}</div>
+            </div>
+            <div class="detail-row">
+              <label class="form-label">Fact Summary / Description</label>
+              <div class="issue-desc-box">${complaint.issueDescription}</div>
+            </div>
+            <div class="detail-row">
+              <label class="form-label">Supporting Evidence</label>
+              <div style="margin-top:0.25rem;">${docsHtml}</div>
+            </div>
+          </div>
+
+          <!-- Right Column: AI Analysis & Legal Draft -->
+          <div>
+            ${lawsHtml}
+            
+            <label class="form-label">AI Generated Case Draft</label>
+            <div class="draft-box" id="modal-draft-container">${draftText}</div>
+            <div class="draft-actions">
+              <button class="btn-draft copy" onclick="copyModalDraft()">📋 Copy</button>
+              <button class="btn-draft download" onclick="downloadModalDraft()">⬇️ Download .txt</button>
+              <button class="btn-draft copy" style="border-color:var(--gold); color:var(--gold); background:none;" onclick="toggleEditModalDraft()" id="btn-edit-modal-draft">✏️ Edit</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <!-- Bottom Row: Case Status & Adv Remarks -->
+        <form onsubmit="saveComplaintUpdates(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Update Case Status</label>
+              <select class="form-input" id="update-modal-status">
+                ${statusOptions}
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Advocate Legal Remarks / Action Plan</label>
+              <textarea class="form-input" id="update-modal-remarks" rows="2" placeholder="Enter tracking remarks for the client...">${complaint.remarks || ''}</textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn-form-gold" style="margin-top:0.5rem;">Save Details & Notify Client</button>
+        </form>
+      `;
+
+      document.getElementById('complaint-details-modal').classList.add('open');
+    }
+
+    function closeComplaintDetailsModal() {
+      document.getElementById('complaint-details-modal').classList.remove('open');
+      currentViewingCaseId = null;
+      isEditingModalDraft = false;
+    }
+
+    function copyModalDraft() {
+      const container = document.getElementById('modal-draft-container');
+      if (!container) return;
+
+      let text = '';
+      const textarea = document.getElementById('modal-draft-textarea');
+      if (textarea) {
+        text = textarea.value;
+      } else {
+        text = container.textContent;
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Draft copied to clipboard!", "success");
+      }).catch(() => {
+        showToast("Could not copy draft.", "error");
+      });
+    }
+
+    function downloadModalDraft() {
+      const container = document.getElementById('modal-draft-container');
+      if (!container) return;
+
+      let text = '';
+      const textarea = document.getElementById('modal-draft-textarea');
+      if (textarea) {
+        text = textarea.value;
+      } else {
+        text = container.textContent;
+      }
+
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Draft_${currentViewingCaseId}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast("Download started.", "success");
+    }
+
+    async function toggleEditModalDraft() {
+      const container = document.getElementById('modal-draft-container');
+      const btn = document.getElementById('btn-edit-modal-draft');
+      if (!container || !btn) return;
+
+      if (!isEditingModalDraft) {
+        const text = container.textContent;
+        container.innerHTML = `<textarea id="modal-draft-textarea" rows="12" style="width:100%; height:250px; font-family:var(--font-mono); font-size:0.78rem; background:rgba(0,0,0,0.5); color:var(--text-primary); border:1px solid var(--gold); border-radius:4px; padding:0.5rem; resize:vertical;">${text}</textarea>`;
+        btn.textContent = '💾 Save';
+        isEditingModalDraft = true;
+      } else {
+        const textarea = document.getElementById('modal-draft-textarea');
+        if (textarea) {
+          const updatedText = textarea.value;
+          container.textContent = updatedText;
+          try {
+            await api.updateComplaint(currentViewingCaseId, { draftText: updatedText });
+            const idx = adminComplaintsCache.findIndex(c => c.caseId === currentViewingCaseId);
+            if (idx !== -1) adminComplaintsCache[idx].draftText = updatedText;
+            showToast("Draft updated successfully.", "success");
+          } catch (error) {
+            showToast(error.message || "Failed to save draft.", "error");
+          }
+        }
+        btn.textContent = '✏️ Edit';
+        isEditingModalDraft = false;
+      }
+    }
+
+    // New complaint handlers
+    function openNewComplaintModal() {
+      const select = document.getElementById('new-case-category');
+      if (select) {
+        const cats = [
+          'Civil Litigation', 'Criminal Matters', 'Cyber Crime & Online Fraud',
+          'Consumer Complaints', 'Family & Divorce Matters', 'Property & Land Disputes',
+          'Cheque Bounce Cases', 'Employment & Labour Disputes', 'Corporate & Business Disputes',
+          'Contract Drafting & Review', 'Money Recovery Cases', 'Legal Notices',
+          'Documentation & Registration', 'Arbitration & Mediation', 'Other Legal Matters'
+        ];
+        select.innerHTML = '<option value="">Select Category</option>' +
+          cats.map(c => `<option value="${c}">${c}</option>`).join('');
+      }
+      document.getElementById('new-complaint-modal').classList.add('open');
+    }
+
+    function closeNewComplaintModal() {
+      document.getElementById('new-complaint-modal').classList.remove('open');
+      document.getElementById('new-complaint-form').reset();
+    }
+
+    function handleUserFilterChange() {
+      usersCurrentPage = 1;
+      renderUsersList();
+    }
+
+    function changeUsersPage(dir) {
+      usersCurrentPage += dir;
+      renderUsersList();
+    }
+
+    function triggerPDFReport() {
+      window.print();
+    }
+
+    function toggleNotifDropdown() {
+      document.getElementById('notif-dropdown-box').classList.toggle('open');
+    }
+
+    // Modal click closure helper
+    document.getElementById('complaint-details-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeComplaintDetailsModal();
+    });
+    document.getElementById('user-edit-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeUserEditModal();
+    });
+    document.getElementById('new-complaint-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeNewComplaintModal();
+    });
+
+    // Sign Out handled in admin-data.js
+
+    // Toast alerts helper
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.className = 'toast' + (type ? ' ' + type : '');
+      void t.offsetWidth;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', async () => {
+      await initAdminProfile();
+      loadData();
+
+      // Close dropdowns on outside document clicks
+      document.addEventListener('click', () => {
+        const notifBox = document.getElementById('notif-dropdown-box');
+        if (notifBox) notifBox.classList.remove('open');
+      });
+
+      document.querySelector('.notif-bell').addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    });
+  </script>
+</body>
+
+</html>

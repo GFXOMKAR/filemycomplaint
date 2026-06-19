@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Complaint — File My Complaint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon"></div>
+      <div class="nav-logo-text">
+        File My Complaint
+        <small>Legal Assistance Platform</small>
+      </div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a onclick="showPage('home')" id="nav-home">Home</a>
+      <a onclick="showPage('about')" id="nav-about">About Us</a>
+      <a onclick="requireAuth('complaint')" class="nav-cta active-link" id="nav-complaint">File Complaint</a>
+    </div>
+    <div class="nav-user" id="nav-user-section" style="display:none;">
+      <span class="nav-user-name" id="nav-user-name">Welcome</span>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="page active" id="page-complaint">
+    <div class="wizard-page-wrapper">
+      <div class="page-header" data-aos="fade-down">
+        <div class="page-header-inner">
+          <p class="page-header-tag">Legal Service</p>
+          <h1>File Your Complaint</h1>
+          <p>Follow our guided wizard to analyze your issue, match applicable laws, generate a professional draft, and
+            file it to the correct authority.</p>
+        </div>
+      </div>
+      <div class="wizard-container">
+        <!-- 4-step progress bar -->
+        <div class="wizard-steps-bar">
+          <div class="cstep active" id="cstep-1">
+            <div class="cstep-num">1</div>Select Category
+          </div>
+          <div class="cstep" id="cstep-2">
+            <div class="cstep-num">2</div>Case Details
+          </div>
+          <div class="cstep" id="cstep-3">
+            <div class="cstep-num">3</div>Personal Details
+          </div>
+          <div class="cstep" id="cstep-4">
+            <div class="cstep-num">4</div>Review & Submit
+          </div>
+        </div>
+
+        <!-- Step 1: Category selection -->
+        <div id="complaint-step1">
+          <div class="wizard-card">
+            <h2 class="wizard-card-title">Select Your Issue Type</h2>
+            <p class="wizard-card-sub">Choose a category that best describes your legal issue to begin.</p>
+            <div class="wizard-category-grid" id="wizard-category-grid"><!-- JS renders --></div>
+            <div class="wizard-nav">
+              <span></span>
+              <button class="btn-wizard-next" onclick="wizardNext(1)">Continue →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Describe issue -->
+        <div id="complaint-step2" style="display:none;">
+          <div class="wizard-card">
+            <h2 class="wizard-card-title" id="w-step2-title">Describe Your Issue</h2>
+            <p class="wizard-card-sub">Provide as many details as possible so we can identify applicable laws and draft
+              your complaint.</p>
+            <div class="desc-prompt-box" id="w-desc-prompt">...</div>
+            <div class="form-group">
+              <label class="form-label">What Happened <span class="required">*</span></label>
+              <textarea class="form-input" id="w-issue-desc" rows="6" placeholder="Describe in detail..."></textarea>
+              <p class="form-hint">Minimum 30 characters</p>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Against Whom <span class="required">*</span></label>
+                <input type="text" class="form-input" id="w-against" placeholder="Company / Person / Entity name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date of Incident <span class="required">*</span></label>
+                <input type="date" class="form-input" id="w-date" />
+              </div>
+            </div>
+            <div class="wizard-nav">
+              <button class="btn-wizard-back" onclick="goToStep(1)">← Back</button>
+              <button class="btn-wizard-next" onclick="wizardNext(2)">Continue →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Personal details -->
+        <div id="complaint-step3" style="display:none;">
+          <div class="wizard-card">
+            <h2 class="wizard-card-title">Your Personal Details</h2>
+            <p class="wizard-card-sub">Please fill in your contact information for the complaint letter.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Full Name <span class="required">*</span></label>
+                <input type="text" class="form-input" id="w-name" placeholder="Your full legal name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mobile Number <span class="required">*</span></label>
+                <input type="tel" class="form-input" id="w-phone" placeholder="+91 98765 43210" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address <span class="required">*</span></label>
+              <input type="email" class="form-input" id="w-email" placeholder="yourname@example.com" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City / District <span class="required">*</span></label>
+                <input type="text" class="form-input" id="w-city" placeholder="Ahmedabad" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">State <span class="required">*</span></label>
+                <select class="form-input" id="w-state">
+                  <option value="">Select State</option>
+                  <option>Gujarat</option>
+                  <option>Maharashtra</option>
+                  <option>Rajasthan</option>
+                  <option>Delhi</option>
+                  <option>Uttar Pradesh</option>
+                  <option>Madhya Pradesh</option>
+                  <option>Karnataka</option>
+                  <option>Tamil Nadu</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <!-- Evidence upload -->
+            <div class="evidence-upload-zone" onclick="document.getElementById('w-docs').click()"
+              style="margin-top: 1.5rem; background: var(--cream); border: 1.5px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; cursor: pointer;">
+              <div class="upload-icon" style="font-size: 1.5rem; margin-bottom: 0.25rem;">📎</div>
+              <div class="upload-label"><strong>Upload Supporting Documents</strong><br>Click to attach files (PDF, JPG,
+                PNG — max 5MB each) — Optional</div>
+              <input type="file" id="w-docs" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none;"
+                onchange="updateFileList()" />
+            </div>
+            <p id="w-file-list" class="form-hint" style="margin-top: 0.5rem;"></p>
+            <div class="wizard-nav" style="margin-top: 1.5rem;">
+              <button class="btn-wizard-back" onclick="goToStep(2)">← Back</button>
+              <button class="btn-wizard-next" onclick="wizardNext(3)">Continue →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Final review & submit -->
+        <div id="complaint-step4" style="display:none;">
+          <div class="wizard-card">
+            <h2 class="wizard-card-title">Review & Submit</h2>
+            <p class="wizard-card-sub">Please verify your details before submitting.</p>
+            <div class="final-review-section">
+              <div id="final-review-content"><!-- JS renders --></div>
+            </div>
+            <div style="margin-bottom:1.5rem; margin-top:1.5rem;">
+              <label
+                style="display:flex;align-items:flex-start;gap:0.75rem;font-size:0.825rem;color:var(--text-muted);cursor:pointer;">
+                <input type="checkbox" id="w-agree"
+                  style="margin-top:3px;accent-color:var(--success);width:16px;height:16px;flex-shrink:0;" />
+                I declare that the information provided is true and correct. I agree to the Terms of Service and Privacy
+                Policy.
+              </label>
+            </div>
+            <button class="btn-submit-complaint" onclick="submitComplaint()" id="pay-btn">
+              ✅ Submit Complaint
+            </button>
+            <div class="wizard-nav" style="border:none;padding-top:0.75rem;margin-top:0.75rem;">
+              <button class="btn-wizard-back" onclick="goToStep(3)">← Back</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: Submitting Complaint -->
+        <div id="complaint-step5" style="display:none;">
+          <div class="wizard-card" style="text-align:center;padding:4rem 2rem;">
+            <div style="font-size:3rem;margin-bottom:1rem;">📤</div>
+            <h3 style="font-family:var(--font-display);color:var(--navy);margin-bottom:0.75rem;">Submitting Complaint</h3>
+            <p style="color:var(--text-muted);font-size:0.875rem;">Please wait while we file your complaint and notify the legal panel.</p>
+            <div style="margin-top:2rem;">
+              <span class="loading-spinner"></span>
+              <span style="color:var(--text-muted);font-size:0.875rem;margin-left:0.5rem;">Processing submission...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div id="complaint-success" style="display:none;">
+          <div class="wizard-card wizard-success">
+            <div class="success-icon">✅</div>
+            <h2 style="font-family:var(--font-display);font-size:1.75rem;color:var(--success);margin-bottom:0.75rem;">
+              Complaint Filed Successfully!</h2>
+            <p style="color:var(--text-muted);margin-bottom:0.5rem;">Your complaint has been received. Your Case ID is:
+            </p>
+            <div class="case-id-box" id="case-id-display">FTC-2024-XXXX</div>
+            <p style="font-size:0.875rem;color:var(--text-muted);max-width:450px;margin:0 auto 2rem;">Our team will
+              review your complaint within 2–3 working days. Keep your Case ID for tracking.</p>
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+              <button class="btn-primary" onclick="showPage('home')">← Back to Home</button>
+              <button class="btn-secondary" onclick="showPage('my-complaints')">📋 View My Complaints</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer data-aos="fade-up">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div
+                style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-display);font-size:16px;">
+              </div>
+              <span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File My Complaint</span>
+            </div>
+            <p>Empowering citizens with legal knowledge and professional advocacy since 2010. Your rights matter — we
+              make sure they are heard.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Services</h4>
+            <ul>
+              <li><a onclick="requireAuth('complaint')">File Complaint</a></li>
+              <li><a onclick="showPage('find-your-law')">Find Your Law</a></li>
+              <li><a onclick="showPage('about')">About Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <ul>
+              <li><a>Privacy Policy</a></li>
+              <li><a>Terms of Service</a></li>
+              <li><a>Disclaimer</a></li>
+              <li><a>Refund Policy</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <ul>
+              <li><a>📧 info@filemycomplaint.in</a></li>
+              <li><a>📞 +91 98765 43210</a></li>
+              <li><a>📍 District Court Road,<br />Ahmedabad, GJ</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2024 File My Complaint. All rights reserved.</span>
+          <span style="font-family:var(--font-mono);">Payments secured by Razorpay</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Authentication Guard
+    if (!getToken()) {
+      sessionStorage.setItem('authRedirect', 'complaint');
+      window.location.href = 'login.html';
+    }
+
+    AOS.init({ duration: 800, once: true });
+    feather.replace();
+
+    function submitComplaint() {
+      const checkbox = document.getElementById('w-agree');
+      if (!checkbox || !checkbox.checked) {
+        showToast('Please agree to the declaration and terms before submitting.', 'error');
+        return;
+      }
+      initiatePayment();
+    }
+
+    function copyDraftFinal() {
+      if (typeof wizardData !== 'undefined' && wizardData.draftText) {
+        navigator.clipboard.writeText(wizardData.draftText).then(() => {
+          showToast('Complaint draft copied to clipboard!', 'success');
+        }).catch(() => {
+          showToast('Could not copy. Please copy manually.', 'error');
+        });
+      } else {
+        copyDraft();
+      }
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File My Complaint — Expert Legal Assistance for Every Complaint</title>
+  <meta name="description"
+    content="Get expert legal guidance for civil, criminal, cyber, consumer, family, property disputes and more. File your complaint online with experienced advocates." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-logo" onclick="window.location.href='index.html'"
+      style="cursor:pointer;display:flex;align-items:center;gap:10px;">
+      <div class="nav-logo-icon"></div>
+      <div class="nav-logo-text">
+        File My Complaint
+        <small>Legal Advocates</small>
+      </div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html" class="active-link" id="nav-home">Home</a>
+      <a href="about.html" id="nav-about">About Us</a>
+      <a href="complaint.html" class="nav-cta" id="nav-complaint">File Complaint</a>
+    </div>
+    <div class="nav-user" id="nav-user-section" style="display:none;">
+      <span class="nav-user-name" id="nav-user-name">Welcome</span>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileNav()" aria-label="Toggle menu">
+      <i data-feather="menu"></i>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="hero-content">
+      <div>
+        <div class="hero-badge"><i data-feather="check-circle" style="width:14px;height:14px;"></i> Trusted Legal
+          Advocacy Since 2010</div>
+        <h1 class="hero-title">
+          Get Legal Assistance<br />
+          <em>for Your Complaint</em>
+        </h1>
+        <p class="hero-subtitle">
+          Expert legal guidance for civil, criminal, cyber, consumer, family, property, and other legal matters. Your
+          rights deserve professional advocacy.
+        </p>
+        <div class="hero-actions">
+          <a href="complaint.html" class="btn-primary" id="btn-file-complaint">
+            <i data-feather="file-text" style="width:18px;height:18px;"></i> File a Complaint
+          </a>
+          <a href="#consultation" class="btn-secondary" id="btn-book-consultation">
+            <i data-feather="calendar" style="width:18px;height:18px;"></i> Book a Consultation
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num" id="hero-cases-filed">0</div>
+            <div class="hero-stat-label">Cases Filed</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num" id="hero-success-rate">0%</div>
+            <div class="hero-stat-label">Success Rate</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">15+</div>
+            <div class="hero-stat-label">Years Practice</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">50+</div>
+            <div class="hero-stat-label">Legal Categories</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image-wrapper">
+        <div class="quote-card floating-quote" id="daily-quote-card">
+          <p class="quote-text" id="quote-text">"Justice delayed is justice denied. Every citizen has the right to be
+            heard, and every complaint deserves a fair and timely resolution."</p>
+          <p class="quote-author" id="quote-author">&mdash; Adv. Rajesh Kumar Sharma</p>
+          <p class="quote-date" id="quote-date">Today's Legal Insight</p>
+          <button class="quote-add-btn" onclick="checkAdminAndAddQuote()" id="add-quote-btn" style="display:none;">+
+            Update Today's Quote</button>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- TRUST BADGES -->
+  <section class="trust-section" data-aos="fade-up">
+    <div class="trust-inner">
+      <div class="trust-badges">
+        <div class="trust-badge"><i data-feather="lock" class="trust-icon"></i> SSL Secured</div>
+        <div class="trust-badge"><i data-feather="award" class="trust-icon"></i> Bar Council Registered</div>
+        <div class="trust-badge"><i data-feather="shield" class="trust-icon"></i> 100% Confidential</div>
+        <div class="trust-badge"><i data-feather="credit-card" class="trust-icon"></i> Secured Payments</div>
+        <div class="trust-badge"><i data-feather="check-square" class="trust-icon"></i> GDPR Compliant</div>
+        <div class="trust-badge"><i data-feather="clock" class="trust-icon"></i> 24×7 Support</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRACTICE AREAS — 15 SERVICE CARDS -->
+  <section class="section" data-aos="fade-up" style="background:var(--white);">
+    <div class="section-inner">
+      <p class="section-tag">Practice Areas</p>
+      <h2 class="section-title">Legal Expertise You<br />Can <em>Rely Upon</em></h2>
+      <p class="section-sub">Comprehensive legal support across all major categories — from consumer rights to corporate
+        disputes, handled with precision and care.</p>
+      <div class="services-grid-15" id="services-grid">
+
+        <a href="service-civil-litigation.html" class="service-card-15" id="card-civil">
+          <div class="service-card-15-icon">⚖️</div>
+          <h3 class="service-card-15-title">Civil Litigation</h3>
+          <p class="service-card-15-desc">Civil suits, injunctions, recovery of money, and disputes resolved through
+            court proceedings.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-criminal-matters.html" class="service-card-15" id="card-criminal">
+          <div class="service-card-15-icon">🔒</div>
+          <h3 class="service-card-15-title">Criminal Matters</h3>
+          <p class="service-card-15-desc">FIR filing, bail applications, cheating, fraud, assault, and all criminal
+            proceedings.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-cyber-crime.html" class="service-card-15" id="card-cyber">
+          <div class="service-card-15-icon">💻</div>
+          <h3 class="service-card-15-title">Cyber Crime & Online Fraud</h3>
+          <p class="service-card-15-desc">Online scams, UPI fraud, identity theft, cyber harassment under the IT Act
+            2000.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-consumer-complaints.html" class="service-card-15" id="card-consumer">
+          <div class="service-card-15-icon">🛒</div>
+          <h3 class="service-card-15-title">Consumer Complaints</h3>
+          <p class="service-card-15-desc">Defective products, service deficiency, unfair trade practices before Consumer
+            Forums.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-family-divorce.html" class="service-card-15" id="card-family">
+          <div class="service-card-15-icon">👨‍👩‍👧</div>
+          <h3 class="service-card-15-title">Family & Divorce Matters</h3>
+          <p class="service-card-15-desc">Divorce, maintenance, child custody, alimony, and matrimonial property
+            disputes.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-property-disputes.html" class="service-card-15" id="card-property">
+          <div class="service-card-15-icon">🏠</div>
+          <h3 class="service-card-15-title">Property & Land Disputes</h3>
+          <p class="service-card-15-desc">Encroachment, boundary disputes, illegal possession, tenancy, and land title
+            issues.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-cheque-bounce.html" class="service-card-15" id="card-cheque">
+          <div class="service-card-15-icon">📝</div>
+          <h3 class="service-card-15-title">Cheque Bounce Cases (NI Act)</h3>
+          <p class="service-card-15-desc">Dishonoured cheques under Section 138 of the Negotiable Instruments Act with
+            full recovery.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-employment-labour.html" class="service-card-15" id="card-employment">
+          <div class="service-card-15-icon">👷</div>
+          <h3 class="service-card-15-title">Employment & Labour Disputes</h3>
+          <p class="service-card-15-desc">Wrongful termination, unpaid wages, workplace harassment, and labour law
+            violations.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-corporate-business.html" class="service-card-15" id="card-corporate">
+          <div class="service-card-15-icon">🏢</div>
+          <h3 class="service-card-15-title">Corporate & Business Disputes</h3>
+          <p class="service-card-15-desc">Partnership disputes, shareholder conflicts, company law violations, and
+            business fraud.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-contract-drafting.html" class="service-card-15" id="card-contract">
+          <div class="service-card-15-icon">📄</div>
+          <h3 class="service-card-15-title">Contract Drafting & Review</h3>
+          <p class="service-card-15-desc">Professional drafting and review of agreements, MOUs, NDAs, and business
+            contracts.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-money-recovery.html" class="service-card-15" id="card-money">
+          <div class="service-card-15-icon">💰</div>
+          <h3 class="service-card-15-title">Money Recovery Cases</h3>
+          <p class="service-card-15-desc">Recovery of loans, dues, deposits, and outstanding payments through legal
+            channels.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-legal-notices.html" class="service-card-15" id="card-notices">
+          <div class="service-card-15-icon">📬</div>
+          <h3 class="service-card-15-title">Legal Notices</h3>
+          <p class="service-card-15-desc">Professionally drafted legal notices to individuals, companies, and government
+            authorities.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-documentation.html" class="service-card-15" id="card-docs">
+          <div class="service-card-15-icon">🗂️</div>
+          <h3 class="service-card-15-title">Documentation & Registration</h3>
+          <p class="service-card-15-desc">Affidavits, deeds, property registration, Notary, and all legal documentation
+            services.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-arbitration.html" class="service-card-15" id="card-arbitration">
+          <div class="service-card-15-icon">🤝</div>
+          <h3 class="service-card-15-title">Arbitration & Mediation</h3>
+          <p class="service-card-15-desc">Alternative dispute resolution to settle commercial and civil disputes faster
+            and privately.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+        <a href="service-other-matters.html" class="service-card-15" id="card-other">
+          <div class="service-card-15-icon">🔍</div>
+          <h3 class="service-card-15-title">Other Legal Matters</h3>
+          <p class="service-card-15-desc">Don't see your issue? We handle all types of legal matters — contact us for
+            consultation.</p>
+          <span class="service-card-15-link">Know More →</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" data-aos="fade-up" style="background:var(--cream);">
+    <div class="section-inner">
+      <p class="section-tag">Process</p>
+      <h2 class="section-title">How It <em>Works</em></h2>
+      <p class="section-sub">Simple, transparent, and professionally managed from start to finish.</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h4 class="step-title">Submit Complaint Form</h4>
+          <p class="step-desc">Fill in your details, describe your issue, and upload supporting documents through our
+            secure portal.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h4 class="step-title">Advocate Review</h4>
+          <p class="step-desc">Our legal team reviews your case, identifies applicable laws, and advises the best course
+            of action.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h4 class="step-title">Document Verification</h4>
+          <p class="step-desc">We verify all documents and prepare the legal notice or complaint draft for your
+            approval.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h4 class="step-title">We Take Action</h4>
+          <p class="step-desc">Legal notice dispatched, complaint filed, and full representation provided at every
+            stage.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section testimonials-section" data-aos="fade-up" style="background:var(--navy);">
+    <div class="section-inner">
+      <p class="section-tag" style="color:var(--gold-light);">Client Stories</p>
+      <h2 class="section-title" style="color:var(--white);">What Our <em style="color:var(--gold);">Clients Say</em>
+      </h2>
+      <p class="section-sub" style="color:rgba(255,255,255,0.55);">Real outcomes. Real people. Real justice delivered.
+      </p>
+      <div class="testimonials-grid">
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"I was cheated online and lost ₹35,000. File My Complaint helped me file an IT Act
+            complaint and within 2 months, the fraudster's account was frozen and I got my money back."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">R</div>
+            <div>
+              <div class="testimonial-name">Ramesh Patil</div>
+              <div class="testimonial-city">Pune, Maharashtra</div>
+            </div>
+          </div>
+          <div class="testimonial-tag">Cyber Crime</div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"My employer didn't pay salary for 3 months. The advocate filed a complaint before
+            the Labour Commissioner and I received full payment plus ₹30,000 compensation within 45 days."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">S</div>
+            <div>
+              <div class="testimonial-name">Sunita Verma</div>
+              <div class="testimonial-city">Ahmedabad, Gujarat</div>
+            </div>
+          </div>
+          <div class="testimonial-tag">Labour Dispute</div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"A defective AC was not replaced despite 6 months of complaints. After filing at
+            Consumer Forum with this team's help, we received full refund + ₹15,000 compensation + litigation costs."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">A</div>
+            <div>
+              <div class="testimonial-name">Ankit Mehta</div>
+              <div class="testimonial-city">Surat, Gujarat</div>
+            </div>
+          </div>
+          <div class="testimonial-tag">Consumer Complaint</div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"A cheque of ₹2 lakhs bounced. Within 60 days of filing under Section 138 NI Act,
+            the court ordered full payment plus double the amount as compensation. Excellent advocacy!"</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">P</div>
+            <div>
+              <div class="testimonial-name">Priya Sharma</div>
+              <div class="testimonial-city">Jaipur, Rajasthan</div>
+            </div>
+          </div>
+          <div class="testimonial-tag">Cheque Bounce</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVOCATE PROFILE -->
+  <section class="section" data-aos="fade-up" style="background:var(--white);">
+    <div class="section-inner">
+      <div class="advocate-profile-wrapper">
+        <div class="advocate-image-col">
+          <div class="advocate-img-placeholder">
+            <span style="font-size:4rem;">👨‍⚖️</span>
+          </div>
+          <div class="advocate-credentials">
+            <div class="credential-item"><i data-feather="award" style="width:16px;height:16px;color:var(--gold);"></i>
+              LLB – Gujarat University</div>
+            <div class="credential-item"><i data-feather="award" style="width:16px;height:16px;color:var(--gold);"></i>
+              LLM – Consumer & Labour Law</div>
+            <div class="credential-item"><i data-feather="shield" style="width:16px;height:16px;color:var(--gold);"></i>
+              Bar Council Reg. No. GJ/1842/2010</div>
+            <div class="credential-item"><i data-feather="users" style="width:16px;height:16px;color:var(--gold);"></i>
+              Supreme Court Practitioner</div>
+          </div>
+        </div>
+        <div class="advocate-info-col">
+          <p class="section-tag">Meet Your Advocate</p>
+          <h2 class="section-title">Adv. Rajesh Kumar<br /><em>Sharma</em></h2>
+          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:1.5rem;">With over 15 years of dedicated legal
+            practice, Adv. Rajesh Kumar Sharma has championed the rights of thousands of citizens across Gujarat and
+            beyond. Specializing in consumer protection, civil litigation, cyber law, and labour disputes, he brings
+            deep expertise and a compassionate approach to every case.</p>
+          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:2rem;">His firm belief: <strong
+              style="color:var(--navy);">"Every citizen deserves access to justice — regardless of their financial
+              background."</strong> That's why File My Complaint offers transparent, affordable, and results-driven
+            legal services.</p>
+          <div class="advocate-stats-row">
+            <div class="advocate-stat"><span class="advocate-stat-num" id="adv-cases-handled">0</span><span
+                class="advocate-stat-label">Cases Handled</span></div>
+            <div class="advocate-stat"><span class="advocate-stat-num">15+</span><span class="advocate-stat-label">Years
+                Experience</span></div>
+            <div class="advocate-stat"><span class="advocate-stat-num" id="adv-success-rate">0%</span><span
+                class="advocate-stat-label">Success Rate</span></div>
+          </div>
+          <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;">
+            <a href="https://wa.me/919876543210?text=Hello%20Adv.%20Rajesh%2C%20I%20need%20legal%20consultation"
+              target="_blank" class="btn-primary" style="background:var(--gold);color:white;text-decoration:none;">
+              <i data-feather="message-circle" style="width:16px;height:16px;"></i> WhatsApp Consultation
+            </a>
+            <a href="about.html" class="btn-secondary" style="text-decoration:none;">
+              <i data-feather="info" style="width:16px;height:16px;"></i> Learn More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOK A CONSULTATION -->
+  <section class="section" id="consultation" data-aos="fade-up" style="background:var(--cream);">
+    <div class="section-inner">
+      <div class="consultation-wrapper">
+        <div class="consultation-info">
+          <p class="section-tag">Free Consultation</p>
+          <h2 class="section-title">Not Sure Where<br />to <em>Start?</em></h2>
+          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:1.5rem;">Book a free 15-minute consultation
+            with our advocate. Describe your issue and get clarity on which legal forum is right for you, what documents
+            you need, and what the expected outcome is.</p>
+          <ul class="consult-perks">
+            <li><i data-feather="check" style="width:16px;height:16px;color:var(--gold);"></i> Free initial consultation
+            </li>
+            <li><i data-feather="check" style="width:16px;height:16px;color:var(--gold);"></i> Response within 24 hours
+            </li>
+            <li><i data-feather="check" style="width:16px;height:16px;color:var(--gold);"></i> 100% confidential
+              discussion</li>
+            <li><i data-feather="check" style="width:16px;height:16px;color:var(--gold);"></i> Expert advocate review
+            </li>
+          </ul>
+        </div>
+        <div class="consultation-form-card">
+          <h3 style="font-family:var(--font-display);color:var(--navy);margin-bottom:1.5rem;font-size:1.35rem;">Book a
+            Free Consultation</h3>
+          <form id="consult-form" onsubmit="handleConsultForm(event)">
+            <div class="form-group">
+              <label class="form-label">Full Name <span class="required">*</span></label>
+              <input type="text" class="form-input" id="consult-name" placeholder="Your full name" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Mobile Number <span class="required">*</span></label>
+                <input type="tel" class="form-input" id="consult-phone" placeholder="+91 98765 43210" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="consult-email" placeholder="yourname@email.com" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Legal Category <span class="required">*</span></label>
+              <select class="form-input" id="consult-category" required>
+                <option value="">Select your issue type</option>
+                <option>Civil Litigation</option>
+                <option>Criminal Matters</option>
+                <option>Cyber Crime & Online Fraud</option>
+                <option>Consumer Complaints</option>
+                <option>Family & Divorce Matters</option>
+                <option>Property & Land Disputes</option>
+                <option>Cheque Bounce Cases</option>
+                <option>Employment & Labour Disputes</option>
+                <option>Corporate & Business Disputes</option>
+                <option>Contract Drafting & Review</option>
+                <option>Money Recovery Cases</option>
+                <option>Legal Notices</option>
+                <option>Documentation & Registration</option>
+                <option>Arbitration & Mediation</option>
+                <option>Other Legal Matters</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Brief Description <span class="required">*</span></label>
+              <textarea class="form-input" id="consult-desc" rows="3" placeholder="Briefly describe your legal issue..."
+                required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;margin-top:0.5rem;">
+              <i data-feather="send" style="width:16px;height:16px;"></i> Submit Consultation Request
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="section" data-aos="fade-up"
+    style="background:linear-gradient(135deg,var(--navy) 0%,#1a2f4a 100%);padding:4rem 2rem;">
+    <div style="text-align:center;max-width:640px;margin:0 auto;">
+      <h2 style="font-family:var(--font-display);font-size:2rem;color:var(--white);margin-bottom:1rem;">Ready to Seek
+        Justice?</h2>
+      <p style="color:rgba(255,255,255,0.55);margin-bottom:2rem;line-height:1.7;">Don't let your rights be violated in
+        silence. File your complaint today with the support of experienced legal advocates. Justice is just a click
+        away.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="complaint.html" class="btn-primary" style="font-size:1rem;padding:1rem 2.5rem;text-decoration:none;">
+          <i data-feather="file-text" style="width:18px;height:18px;"></i> File Your Complaint Now
+        </a>
+        <a href="https://wa.me/919876543210?text=Hello%2C%20I%20need%20legal%20help" target="_blank"
+          class="btn-secondary"
+          style="font-size:1rem;padding:1rem 2.5rem;text-decoration:none;background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);color:white;">
+          <i data-feather="message-circle" style="width:18px;height:18px;"></i> WhatsApp Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer data-aos="fade-up">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div
+              style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-display);font-size:16px;">
+            </div>
+            <span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File My Complaint</span>
+          </div>
+          <p>Empowering citizens with legal knowledge and professional advocacy since 2010. Your rights matter — we make
+            sure they are heard.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Practice Areas</h4>
+          <ul>
+            <li><a href="service-civil-litigation.html">Civil Litigation</a></li>
+            <li><a href="service-criminal-matters.html">Criminal Matters</a></li>
+            <li><a href="service-cyber-crime.html">Cyber Crime</a></li>
+            <li><a href="service-consumer-complaints.html">Consumer Complaints</a></li>
+            <li><a href="service-family-divorce.html">Family & Divorce</a></li>
+            <li><a href="service-property-disputes.html">Property Disputes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>More Services</h4>
+          <ul>
+            <li><a href="service-cheque-bounce.html">Cheque Bounce</a></li>
+            <li><a href="service-employment-labour.html">Labour Disputes</a></li>
+            <li><a href="service-money-recovery.html">Money Recovery</a></li>
+            <li><a href="service-legal-notices.html">Legal Notices</a></li>
+            <li><a href="service-arbitration.html">Arbitration</a></li>
+            <li><a href="service-other-matters.html">Other Matters</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:info@filemycomplaint.in">📧 info@filemycomplaint.in</a></li>
+            <li><a href="tel:+919876543210">📞 +91 98765 43210</a></li>
+            <li><a href="https://wa.me/919876543210" target="_blank">💬 WhatsApp Us</a></li>
+            <li><a>📍 District Court Road,<br />Ahmedabad, Gujarat</a></li>
+          </ul>
+          <h4 style="margin-top:1.5rem;">Quick Links</h4>
+          <ul>
+            <li><a href="find-your-law.html">Find Your Law</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="complaint.html">File Complaint</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-disclaimer">
+        <strong>Disclaimer:</strong> The information provided on this website is for general informational purposes only
+        and does not constitute legal advice. Consultation with an advocate is recommended for case-specific guidance.
+      </div>
+      <div class="footer-bottom">
+        <span>© 2024 File My Complaint. All rights reserved.</span>
+        <span style="font-family:var(--font-mono);">Payments secured by Razorpay</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WHATSAPP FLOATING BUTTON -->
+  <a href="https://wa.me/919876543210?text=Hello%2C%20I%20need%20legal%20assistance" target="_blank"
+    class="whatsapp-float" id="whatsapp-float" title="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+      <path
+        d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.11 1.523 5.836L.073 23.27a.75.75 0 00.916.917l5.434-1.45A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.714 9.714 0 01-4.951-1.358l-.355-.21-3.676.98.98-3.676-.21-.355A9.714 9.714 0 012.25 12C2.25 6.61 6.61 2.25 12 2.25S21.75 6.61 21.75 12 17.39 21.75 12 21.75z" />
+    </svg>
+    <span class="whatsapp-tooltip">Chat with us</span>
+  </a>
+
+  <!-- QUOTE MODAL -->
+  <div class="modal-overlay" id="quote-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Update Today's Quote</h3>
+        <button class="modal-close" onclick="closeQuoteModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Daily Quote / Legal Insight <span class="required">*</span></label>
+          <textarea class="form-input" id="new-quote-text" rows="4"
+            placeholder="Enter the quote or legal knowledge for today..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Author Name</label>
+          <input type="text" class="form-input" id="new-quote-author" value="Adv. Rajesh Kumar Sharma" />
+        </div>
+        <button class="btn-form gold" onclick="saveQuote()">Save & Publish</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="api.js"></script>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    feather.replace();
+
+    // Init auth state
+    (function () {
+      const user = getStoredUser();
+      if (user && getToken()) {
+        currentUser = user;
+        const userSection = document.getElementById('nav-user-section');
+        if (userSection) userSection.style.display = 'flex';
+        const userName = document.getElementById('nav-user-name');
+        if (userName) userName.textContent = user.fname + ' ' + user.lname;
+        if (user.role === 'admin') {
+          const addQuoteBtn = document.getElementById('add-quote-btn');
+          if (addQuoteBtn) addQuoteBtn.style.display = 'block';
+        }
+      }
+    })();
+
+    function toggleMobileNav() {
+      const navLinks = document.getElementById('nav-links');
+      navLinks.classList.toggle('mobile-open');
+    }
+
+    function handleConsultForm(e) {
+      e.preventDefault();
+      const name = document.getElementById('consult-name').value.trim();
+      const phone = document.getElementById('consult-phone').value.trim();
+      const email = document.getElementById('consult-email').value.trim();
+      const category = document.getElementById('consult-category').value;
+      const desc = document.getElementById('consult-desc').value.trim();
+      if (!name || !phone || !category || !desc) {
+        showToast('Please fill in all required fields.', 'error');
+        return;
+      }
+      const phoneRegex = /^[6-9]\d{9}$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!phoneRegex.test(phone)) {
+        showToast('Please enter a valid 10-digit mobile number.', 'error');
+        return;
+      }
+      if (email && !emailRegex.test(email)) {
+        showToast('Please enter a valid email address.', 'error');
+        return;
+      }
+      const msg = encodeURIComponent(`Hello Adv. Rajesh, I would like to book a free consultation.\n\nName: ${name}\nPhone: ${phone}\nCategory: ${category}\n\nIssue: ${desc}`);
+      window.open(`https://wa.me/919876543210?text=${msg}`, '_blank');
+      showToast('Redirecting to WhatsApp for consultation...', 'success');
+      document.getElementById('consult-form').reset();
+    }
+
+    function checkAdminAndAddQuote() {
+      document.getElementById('quote-modal').style.display = 'flex';
+    }
+    function closeQuoteModal() {
+      document.getElementById('quote-modal').style.display = 'none';
+    }
+    function saveQuote() {
+      const text = document.getElementById('new-quote-text').value.trim();
+      const author = document.getElementById('new-quote-author').value.trim();
+      if (!text) { showToast('Please enter a quote.', 'error'); return; }
+      document.getElementById('quote-text').textContent = `"${text}"`;
+      document.getElementById('quote-author').textContent = `— ${author}`;
+      closeQuoteModal();
+      showToast('Quote updated successfully!', 'success');
+    }
+    function showToast(msg, type) {
+      const t = document.getElementById('toast');
+      if (t) { t.textContent = msg; t.className = 'toast show ' + (type || ''); setTimeout(() => t.className = 'toast', 3000); }
+    }
+    function signOut() {
+      clearAuth();
+      currentUser = null;
+      window.location.reload();
+    }
+  </script>
+</body>
+
+</html>

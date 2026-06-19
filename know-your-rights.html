@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Know Your Rights — File My Complaint</title>
+  <meta name="description" content="Plain-language legal guides for common issues: online fraud, salary unpaid, bank fraud, cyber bullying, domestic violence, and RTI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-icon"></div>
+    <div class="nav-logo-text">
+      File My Complaint
+      <small>Legal Assistance Platform</small>
+    </div>
+  </div>
+  <div class="nav-links" id="nav-links">
+    <a onclick="showPage('home')" id="nav-home">Home</a>
+    <a onclick="showPage('find-your-law')" id="nav-findlaw">Find Your Law</a>
+    <a onclick="showPage('know-your-rights')" class="active-link" id="nav-rights">Know Your Rights</a>
+    <a onclick="showPage('about')" id="nav-about">About Us</a>
+    <a onclick="requireAuth('complaint')" class="nav-cta" id="nav-complaint">File Complaint</a>
+  </div>
+  <div class="nav-user" id="nav-user-section" style="display:none;">
+    <span class="nav-user-name" id="nav-user-name">Welcome</span>
+    <button class="btn-signout" onclick="signOut()">Sign Out</button>
+  </div>
+</nav>
+
+<div class="kyr-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-inner" style="max-width:1200px;">
+      <p class="page-header-tag">Legal Guides</p>
+      <h1>Know Your Rights</h1>
+      <p>Plain-language guides for the most common legal issues. Understand the law, your rights, and exactly what to do — without any legal jargon.</p>
+    </div>
+  </div>
+
+  <div class="kyr-main">
+
+    <!-- GUIDES GRID SECTION -->
+    <div id="guides-grid-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <h2 style="font-family:var(--font-display);font-size:1.4rem;color:var(--navy);font-weight:700;margin-bottom:0.25rem;">
+            6 Legal Guides
+          </h2>
+          <p style="font-size:0.875rem;color:var(--text-muted);">Click any guide to read the full details — your rights, applicable law, where to file, and documents needed.</p>
+        </div>
+        <button class="btn-secondary" onclick="requireAuth('complaint')" style="font-size:0.875rem;padding:0.6rem 1.25rem;">
+          📝 File a Complaint
+        </button>
+      </div>
+
+      <!-- Info bar -->
+      <div style="background:rgba(33,37,41,0.03);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;margin-bottom:2rem;display:flex;align-items:center;gap:0.875rem;">
+        <span style="font-size:1.5rem;">💡</span>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin:0;line-height:1.55;">
+          <strong style="color:var(--navy);">These are general legal guides.</strong> Every situation is unique — after reading your guide, use our complaint wizard to get a personalized draft specific to your case.
+        </p>
+      </div>
+
+      <div id="guides-grid" class="guides-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- GUIDE DETAIL PANEL (shown when a guide is clicked) -->
+    <div id="guide-detail-panel" style="display:none;"></div>
+
+    <!-- BOTTOM CTA -->
+    <div style="margin-top:3rem;background:var(--navy);border-radius:20px;padding:2.5rem;text-align:center;" data-aos="fade-up">
+      <h3 style="font-family:var(--font-display);color:white;font-size:1.5rem;margin-bottom:0.75rem;">
+        Ready to Take Action?
+      </h3>
+      <p style="color:rgba(255,255,255,0.6);margin-bottom:1.5rem;font-size:0.9rem;line-height:1.65;">
+        After reading your rights, use our 6-step complaint wizard to generate a professional complaint letter and submit it to the right authority.
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="requireAuth('complaint')" style="background:white;color:var(--navy);">
+          📝 Start Complaint Wizard
+        </button>
+        <button class="btn-secondary" onclick="showPage('find-your-law')" style="border-color:rgba(255,255,255,0.3);color:white;">
+          ⚖️ Find Your Law
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:4rem;">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+            <span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File My Complaint</span>
+          </div>
+          <p>Empowering citizens with legal knowledge and guided complaint filing.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a onclick="showPage('home')">Home</a></li>
+            <li><a onclick="showPage('find-your-law')">Find Your Law</a></li>
+            <li><a onclick="showPage('know-your-rights')">Know Your Rights</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal Guides</h4>
+          <ul>
+            <li><a onclick="openGuide('online-shopping')">Online Shopping Fraud</a></li>
+            <li><a onclick="openGuide('salary-unpaid')">Salary Not Paid</a></li>
+            <li><a onclick="openGuide('bank-fraud')">Bank Fraud</a></li>
+            <li><a onclick="openGuide('cyber-bullying')">Cyber Bullying</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a>📧 info@filemycomplaint.in</a></li>
+            <li><a>📞 +91 98765 43210</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2024 File My Complaint. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init({ duration: 800, once: true }); feather.replace();</script>
+</body>
+</html>

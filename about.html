@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — File My Complaint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon"></div>
+      <div class="nav-logo-text">
+        File My Complaint
+        <small>Legal Assistance Platform</small>
+      </div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a onclick="showPage('home')" id="nav-home">Home</a>
+      <a onclick="showPage('about')" class="active-link" id="nav-about">About Us</a>
+      <a onclick="requireAuth('complaint')" class="nav-cta" id="nav-complaint">File Complaint</a>
+    </div>
+    <div class="nav-user" id="nav-user-section" style="display:none;">
+      <span class="nav-user-name" id="nav-user-name">Welcome</span>
+      <button class="btn-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="page active" id="page-about">
+    <div style="padding-top:72px;">
+      <div class="about-hero" data-aos="fade-down">
+        <div class="about-hero-content">
+          <p
+            style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-light);margin-bottom:0.75rem;">
+            About Our Practice</p>
+          <h1>Justice Is Not a<br /><em>Privilege</em> — It's a Right</h1>
+          <p>We are a team of dedicated legal advocates committed to making the Indian justice system accessible to
+            every citizen.</p>
+        </div>
+      </div>
+      <div class="about-content">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2 style="font-family:var(--font-display);font-size:1.75rem;color:var(--navy);margin-bottom:1rem;">Our
+              Story</h2>
+            <p>Founded in 2010 by Advocate Rajesh Kumar Sharma, <strong>File My Complaint</strong> was born from a
+              simple belief: every citizen, regardless of economic status, deserves quality legal representation.</p>
+            <p>Over 15 years, we have handled more than 2,400 cases across consumer protection, labour disputes,
+              property matters, and criminal defence — with an industry-leading 94% resolution rate.</p>
+            <p>Our digital platform was launched to remove the barriers that prevent ordinary people from accessing the
+              legal system. Filing a complaint should not require a law degree.</p>
+            <div
+              style="margin-top:2rem;padding:1.5rem;background:var(--cream-dark);border-radius:12px;border-left:3px solid var(--gold);">
+              <p style="font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:var(--navy);">"We
+                don't just file paperwork. We fight for people."</p>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.5rem;">— Adv. Rajesh Kumar Sharma, Founder
+              </p>
+            </div>
+          </div>
+          <div class="about-values">
+            <div class="value-item">
+              <h4>🛡️ Integrity First</h4>
+              <p>We uphold the highest ethical standards in every case, ensuring transparent communication with all
+                clients.</p>
+            </div>
+            <div class="value-item">
+              <h4>🔒 Client Confidentiality</h4>
+              <p>All information you share with us is protected under attorney-client privilege and our strict privacy
+                policy.</p>
+            </div>
+            <div class="value-item">
+              <h4>⚖️ Accessible Justice</h4>
+              <p>We keep our fees minimal to ensure that financial constraints never stand between you and legal
+                protection.</p>
+            </div>
+            <div class="value-item">
+              <h4>⏱️ Prompt Action</h4>
+              <p>Every complaint is reviewed within 48 hours. We believe urgency is respect for your situation.</p>
+            </div>
+            <div class="value-item">
+              <h4>📖 Knowledge Sharing</h4>
+              <p>Through our legal library and guided resource guides, we empower citizens with the knowledge to protect
+                themselves.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- FOOTER -->
+    <footer data-aos="fade-up">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div
+                style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-display);font-size:16px;">
+              </div>
+              <span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File My Complaint</span>
+            </div>
+            <p>Empowering citizens with legal knowledge and professional advocacy since 2010. Your rights matter — we
+              make
+              sure they are heard.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Practice Areas</h4>
+            <ul>
+              <li><a href="service-civil-litigation.html">Civil Litigation</a></li>
+              <li><a href="service-criminal-matters.html">Criminal Matters</a></li>
+              <li><a href="service-cyber-crime.html">Cyber Crime</a></li>
+              <li><a href="service-consumer-complaints.html">Consumer Complaints</a></li>
+              <li><a href="service-family-divorce.html">Family & Divorce</a></li>
+              <li><a href="service-property-disputes.html">Property Disputes</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>More Services</h4>
+            <ul>
+              <li><a href="service-cheque-bounce.html">Cheque Bounce</a></li>
+              <li><a href="service-employment-labour.html">Labour Disputes</a></li>
+              <li><a href="service-money-recovery.html">Money Recovery</a></li>
+              <li><a href="service-legal-notices.html">Legal Notices</a></li>
+              <li><a href="service-arbitration.html">Arbitration</a></li>
+              <li><a href="service-other-matters.html">Other Matters</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <ul>
+              <li><a href="mailto:info@filemycomplaint.in">📧 info@filemycomplaint.in</a></li>
+              <li><a href="tel:+919876543210">📞 +91 98765 43210</a></li>
+              <li><a href="https://wa.me/919876543210" target="_blank">💬 WhatsApp Us</a></li>
+              <li><a>📍 District Court Road,<br />Ahmedabad, Gujarat</a></li>
+            </ul>
+            <h4 style="margin-top:1.5rem;">Quick Links</h4>
+            <ul>
+              <li><a href="find-your-law.html">Find Your Law</a></li>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="complaint.html">File Complaint</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-disclaimer">
+          <strong>Disclaimer:</strong> The information provided on this website is for general informational purposes
+          only
+          and does not constitute legal advice. Consultation with an advocate is recommended for case-specific guidance.
+        </div>
+        <div class="footer-bottom">
+          <span>© 2024 File My Complaint. All rights reserved.</span>
+          <span style="font-family:var(--font-mono);">Payments secured by Razorpay</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init({ duration: 800, once: true }); feather.replace();</script>
+</body>
+
+</html>
