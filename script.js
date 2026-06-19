@@ -1118,3 +1118,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Global requireAuth function
+window.requireAuth = function(destination) {
+  // Determine actual target file
+  const destFile = destination === 'complaint' ? 'complaint.html' : destination;
+  
+  if (localStorage.getItem('token')) {
+    window.location.href = destFile;
+  } else {
+    sessionStorage.setItem('authRedirect', destFile);
+    window.location.href = 'signup.html';
+  }
+};
+
