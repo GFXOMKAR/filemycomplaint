@@ -4398,3 +4398,58 @@ body.dark-mode .service-desc {
 body.dark-mode nav {
   background: rgba(15, 23, 42, 0.8) !important;
 }
+
+/* Responsive Nav & Offline Banner */
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--gold);
+  cursor: pointer;
+}
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #dc2626;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  z-index: 99999;
+  font-weight: 600;
+  font-family: var(--font-body);
+  display: none;
+}
+.offline-banner.show {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .nav-hamburger {
+    display: block;
+  }
+  .nav-links {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: var(--navy);
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1rem;
+    display: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  .nav-links.mobile-open {
+    display: flex;
+  }
+  .nav-user {
+    display: none !important;
+  }
+}

@@ -1082,3 +1082,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const fylSearch = document.getElementById('fyl-search-input');
   if (fylSearch) fylSearch.addEventListener('keydown', e => { if (e.key === 'Enter') filterFYL(); });
 });
+
+// Offline Indicator Logic
+document.addEventListener('DOMContentLoaded', () => {
+  const offlineBanner = document.createElement('div');
+  offlineBanner.className = 'offline-banner';
+  offlineBanner.textContent = 'You are currently offline. Please check your internet connection.';
+  document.body.appendChild(offlineBanner);
+
+  function updateOnlineStatus() {
+    if (navigator.onLine) {
+      offlineBanner.classList.remove('show');
+    } else {
+      offlineBanner.classList.add('show');
+    }
+  }
+
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+  updateOnlineStatus(); // Check on load
+});
+
