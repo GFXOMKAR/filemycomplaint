@@ -400,55 +400,83 @@ function requireAuth(targetPage) {
   currentUser = typeof getStoredUser === 'function' ? getStoredUser() : null;
 })();
 
-async function handleSignup() {
+let otpEmail = '';
+
+async function handleSignupSendOtp() {
   const fname = document.getElementById('signup-fname').value.trim();
   const lname = document.getElementById('signup-lname').value.trim();
   const email = document.getElementById('signup-email').value.trim().toLowerCase();
   const phone = document.getElementById('signup-phone').value.trim();
   const city = document.getElementById('signup-city').value.trim();
-  const pass = document.getElementById('signup-pass').value;
-  const pass2 = document.getElementById('signup-pass2').value;
-  const btn = document.getElementById('signup-btn');
+  const btn = document.getElementById('signup-send-otp-btn');
   document.getElementById('signup-error').style.display = 'none';
-  document.getElementById('signup-success').style.display = 'none';
 
-  if (!fname || !lname || !email || !phone || !city || !pass) { showAlert('signup-error', 'All fields are required.'); return; }
+  if (!fname || !lname || !email || !phone || !city) { showAlert('signup-error', 'All fields are required.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('signup-error', 'Invalid email.'); return; }
   if (!/^[6-9]\d{9}$/.test(phone)) { showAlert('signup-error', 'Invalid 10-digit mobile.'); return; }
-  if (pass.length < 8) { showAlert('signup-error', 'Password must be 8+ characters.'); return; }
-  if (pass !== pass2) { showAlert('signup-error', 'Passwords do not match.'); return; }
 
-  if (btn) { btn.disabled = true; btn.textContent = 'Creating account...'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending OTP...'; }
 
   try {
-    const data = await api.register({ fname, lname, email, phone, city, password: pass });
-    showAlert('signup-success', 'Account created! Signing you in...');
-    setTimeout(() => { loginUser(data.user, data.token); }, 800);
+    await api.sendOtp({ isSignup: true, fname, lname, email, phone, city });
+    otpEmail = email;
+    document.getElementById('signup-step-1').style.display = 'none';
+    document.getElementById('signup-step-2').style.display = 'block';
   } catch (error) {
-    showAlert('signup-error', error.message || 'Registration failed.');
+    showAlert('signup-error', error.message || 'Failed to send OTP.');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Create My Account →'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Send OTP →'; }
   }
 }
 
-async function handleLogin() {
+async function handleLoginSendOtp() {
   const email = document.getElementById('login-email').value.trim().toLowerCase();
-  const pass = document.getElementById('login-pass').value;
-  const btn = document.getElementById('login-btn');
+  const btn = document.getElementById('login-send-otp-btn');
   document.getElementById('login-error').style.display = 'none';
-  if (!email || !pass) { showAlert('login-error', 'Enter email and password.'); return; }
 
-  if (btn) { btn.disabled = true; btn.textContent = 'Signing in...'; }
+  if (!email) { showAlert('login-error', 'Enter email address.'); return; }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending OTP...'; }
 
   try {
-    const data = await api.login({ email, password: pass });
+    await api.sendOtp({ isSignup: false, email });
+    otpEmail = email;
+    document.getElementById('login-step-1').style.display = 'none';
+    document.getElementById('login-step-2').style.display = 'block';
+  } catch (error) {
+    showAlert('login-error', error.message || 'Failed to send OTP.');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Send OTP →'; }
+  }
+}
+
+async function handleVerifyOtp(type) {
+  const otp = document.getElementById(`${type}-otp`).value.trim();
+  const btn = document.getElementById(`${type}-verify-btn`);
+  document.getElementById(`${type}-error`).style.display = 'none';
+
+  if (!otp) { showAlert(`${type}-error`, 'Enter the OTP sent to your email.'); return; }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Verifying...'; }
+
+  try {
+    const data = await api.verifyOtp({ email: otpEmail, otp });
     loginUser(data.user, data.token);
   } catch (error) {
-    showAlert('login-error', error.message || 'Invalid email or password.');
+    showAlert(`${type}-error`, error.message || 'Invalid or expired OTP.');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Sign In →'; }
+    if (btn) { btn.disabled = false; btn.textContent = type === 'signup' ? 'Verify & Create Account →' : 'Verify & Sign In →'; }
   }
 }
+
+function resetAuthFlow(type) {
+  otpEmail = '';
+  document.getElementById(`${type}-step-1`).style.display = 'block';
+  document.getElementById(`${type}-step-2`).style.display = 'none';
+  const otpInput = document.getElementById(`${type}-otp`);
+  if (otpInput) otpInput.value = '';
+}
+
 
 function loginUser(user, token) {
   currentUser = user;

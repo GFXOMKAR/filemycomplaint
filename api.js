@@ -64,15 +64,15 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 const api = {
-  register(payload) {
-    return apiRequest('/auth/register', {
+  sendOtp(payload) {
+    return apiRequest('/auth/send-otp', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
   },
 
-  login(payload) {
-    return apiRequest('/auth/login', {
+  verifyOtp(payload) {
+    return apiRequest('/auth/verify-otp', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
