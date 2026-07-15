@@ -150,4 +150,20 @@ exports.verifyOtp = async (req, res, next) => {
   }
 };
 
+exports.getMe = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    res.status(200).json({
+      success: true,
+      user: formatUserResponse(req.user),
+    });
+  } catch (error) {
+    console.error('Get Me Error:', error);
+    res.status(500).json({ success: false, message: 'Server error during fetching current user.' });
+  }
+};
+
 exports.formatUserResponse = formatUserResponse;
+
