@@ -34,6 +34,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Serve frontend static files from the parent directory
 const frontendPath = path.join(__dirname, '..');
 app.use(express.static(frontendPath));
 
