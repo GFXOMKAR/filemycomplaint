@@ -34,23 +34,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.get('/api/debug-files', (req, res) => {
-  try {
-    const fs = require('fs');
-    const rootFiles = fs.readdirSync(path.join(__dirname, '..'));
-    const indexContent = fs.existsSync(path.join(__dirname, '..', 'index.html'))
-      ? fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8').substring(0, 500)
-      : 'NO INDEX.HTML';
-    res.json({
-      success: true,
-      rootFiles,
-      indexPreview: indexContent,
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
 // Serve frontend static files from the parent directory
 const frontendPath = path.join(__dirname, '..');
 app.use(express.static(frontendPath));
