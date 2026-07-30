@@ -1,685 +1,700 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>File My Complaint — Expert Legal Assistance for Every Complaint</title>
-  <meta name="description"
-    content="Get expert legal guidance for civil, criminal, cyber, consumer, family, property disputes and more. File your complaint online with experienced advocates." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet" />
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <link rel="stylesheet" href="style.css?v=2">
-  <script src="https://unpkg.com/feather-icons"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-</head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aether Budget — Notion + Apple + Linear Monthly Finance Dashboard</title>
+  <meta name="description" content="A premium Notion, Apple and Linear styled monthly budget tracker with interactive charts, local storage, custom categories, income & expense analytics.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%237C3AED'/><stop offset='100%' stop-color='%2322D3EE'/></linearGradient></defs><rect width='100' height='100' rx='28' fill='url(%23g)'/><path d='M30 70V30L50 50L70 30V70' stroke='%23fff' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
-  <!-- NAVIGATION -->
-  <nav>
-    <div class="nav-logo" onclick="window.location.href='index.html'"
-      style="cursor:pointer;display:flex;align-items:center;gap:10px;">
-      <div class="nav-logo-icon"></div>
-      <div class="nav-logo-text">
-        File My Complaint
-        <small>Legal Advocates</small>
-      </div>
-    </div>
-    <div class="nav-links" id="nav-links">
-      <a href="index.html" class="active-link" id="nav-home">Home</a>
-      <a href="about.html" id="nav-about">About Us</a>
-      <a onclick="requireAuth('complaint.html')" class="nav-cta" id="nav-complaint" style="cursor:pointer">File Complaint</a>
-    </div>
-    <div class="nav-user" id="nav-user-section" style="display:none;">
-      <span class="nav-user-name" id="nav-user-name">Welcome</span>
-      <button class="btn-signout" onclick="signOut()">Sign Out</button>
-    </div>
-    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileNav()" aria-label="Toggle menu">
-      <i data-feather="menu"></i>
-    </button>
-  </nav>
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="toast-container"></div>
 
-  <!-- HERO -->
-  <section class="hero" id="hero">
-    <div class="hero-bg-pattern"></div>
-    <div class="hero-grid-lines"></div>
-    <div class="hero-content">
-      <div>
-        <div class="hero-badge"><i data-feather="check-circle" style="width:14px;height:14px;"></i> Trusted Legal
-          Advocacy Since 2010</div>
-        <h1 class="hero-title">
-          Get Legal Assistance<br />
-          <em>for Your Complaint</em>
-        </h1>
-        <p class="hero-subtitle">
-          Expert legal guidance for civil, criminal, cyber, consumer, family, property, and other legal matters. Your
-          rights deserve professional advocacy.
-        </p>
-        <div class="hero-actions">
-          <a onclick="requireAuth('complaint.html')" class="btn-primary" id="btn-file-complaint" style="cursor:pointer">
-            <i data-feather="file-text" style="width:18px;height:18px;"></i> File a Complaint
-          </a>
-          <a href="#consultation" class="btn-secondary" id="btn-book-consultation">
-            <i data-feather="calendar" style="width:18px;height:18px;"></i> Book a Consultation
-          </a>
-        </div>
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <div class="hero-stat-num" id="hero-cases-filed">0</div>
-            <div class="hero-stat-label">Cases Filed</div>
+  <div class="app-layout">
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 40 40" fill="none">
+              <rect width="40" height="40" rx="12" fill="url(#side-logo-grad)"/>
+              <path d="M12 28V12L20 20L28 12V28" stroke="#FFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs>
+                <linearGradient id="side-logo-grad" x1="0" y1="0" x2="40" y2="40">
+                  <stop stop-color="#7C3AED"/>
+                  <stop offset="1" stop-color="#22D3EE"/>
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
-          <div class="hero-stat">
-            <div class="hero-stat-num" id="hero-success-rate">0%</div>
-            <div class="hero-stat-label">Success Rate</div>
+          <span class="brand-text">AETHER<span class="brand-sub">BUDGET</span></span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-group-label">WORKSPACE</div>
+        <ul class="nav-list">
+          <li>
+            <button class="nav-item active" data-view="dashboard">
+              <span class="nav-icon">📊</span>
+              <span class="nav-label">Dashboard</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-view="expenses">
+              <span class="nav-icon">💸</span>
+              <span class="nav-label">Expenses</span>
+              <span class="nav-badge" id="sidebar-expense-count">0</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-view="income">
+              <span class="nav-icon">💵</span>
+              <span class="nav-label">Income</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-view="budget">
+              <span class="nav-icon">🎯</span>
+              <span class="nav-label">Monthly Budget</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-view="categories">
+              <span class="nav-icon">🏷️</span>
+              <span class="nav-label">Categories</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item" data-view="savings">
+              <span class="nav-icon">🏦</span>
+              <span class="nav-label">Savings Goals</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="nav-group-label" style="margin-top: 24px;">SYSTEM</div>
+        <ul class="nav-list">
+          <li>
+            <button class="nav-item" data-view="settings">
+              <span class="nav-icon">⚙️</span>
+              <span class="nav-label">Settings &amp; Data</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Sidebar Active Month Widget -->
+      <div class="sidebar-month-widget">
+        <div class="month-widget-info">
+          <span class="month-widget-label">ACTIVE MONTH</span>
+          <span class="month-widget-name" id="sidebar-active-month">July 2026</span>
+        </div>
+        <button class="btn btn-secondary btn-xs" id="sidebar-add-month-btn" title="Create New Month">+ New</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <div class="main-wrapper">
+
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Navigation Sidebar">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </button>
+          
+          <!-- Month Selector -->
+          <div class="month-selector-wrap">
+            <span class="selector-icon">📅</span>
+            <select id="month-select" class="month-select" aria-label="Select Active Month">
+              <!-- Dynamically populated options -->
+            </select>
           </div>
-          <div class="hero-stat">
-            <div class="hero-stat-num">15+</div>
-            <div class="hero-stat-label">Years Practice</div>
+        </div>
+
+        <div class="topbar-center">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="global-search" placeholder="Search transactions, categories, notes..." aria-label="Search">
           </div>
-          <div class="hero-stat">
-            <div class="hero-stat-num">50+</div>
-            <div class="hero-stat-label">Legal Categories</div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="btn btn-primary btn-sm" id="topbar-quick-add-btn">
+            <span>+ Add Expense</span>
+          </button>
+
+          <button class="icon-btn" id="notif-btn" title="Notifications">
+            <span class="notif-badge"></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </button>
+
+          <div class="user-profile">
+            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><circle cx='20' cy='20' r='20' fill='%237C3AED'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-family='sans-serif' font-weight='bold' font-size='16'>MK</text></svg>" alt="User Avatar" class="profile-avatar">
+            <div class="profile-info">
+              <span class="profile-name">Alex Pro</span>
+              <span class="profile-role">Pro Tier</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="hero-image-wrapper">
-        <div class="quote-card floating-quote" id="daily-quote-card">
-          <p class="quote-text" id="quote-text">"Justice delayed is justice denied. Every citizen has the right to be
-            heard, and every complaint deserves a fair and timely resolution."</p>
-          <p class="quote-author" id="quote-author">&mdash; Adv. Rajesh Kumar Sharma</p>
-          <p class="quote-date" id="quote-date">Today's Legal Insight</p>
-          <button class="quote-add-btn" onclick="checkAdminAndAddQuote()" id="add-quote-btn" style="display:none;">+
-            Update Today's Quote</button>
-        </div>
-      </div>
-    </div>
-    </div>
-    </div>
-  </section>
+      </header>
 
-  <!-- TRUST BADGES -->
-  <section class="trust-section" data-aos="fade-up">
-    <div class="trust-inner">
-      <div class="trust-badges">
-        <div class="trust-badge"><i data-feather="lock" class="trust-icon"></i> SSL Secured</div>
-        <div class="trust-badge"><i data-feather="award" class="trust-icon"></i> Bar Council Registered</div>
-        <div class="trust-badge"><i data-feather="shield" class="trust-icon"></i> 100% Confidential</div>
-        <div class="trust-badge"><i data-feather="credit-card" class="trust-icon"></i> Secured Payments</div>
-        <div class="trust-badge"><i data-feather="check-square" class="trust-icon"></i> GDPR Compliant</div>
-        <div class="trust-badge"><i data-feather="clock" class="trust-icon"></i> 24×7 Support</div>
-      </div>
-    </div>
-  </section>
+      <!-- VIEW CONTENT AREA -->
+      <main class="content-area">
 
-  <!-- PRACTICE AREAS — 15 SERVICE CARDS -->
-  <section class="section" data-aos="fade-up" style="background:var(--white);">
-    <div class="section-inner">
-      <p class="section-tag">Practice Areas</p>
-      <h2 class="section-title">Legal Expertise You<br />Can <em>Rely Upon</em></h2>
-      <p class="section-sub">Comprehensive legal support across all major categories — from consumer rights to corporate
-        disputes, handled with precision and care.</p>
-      <div class="services-grid-15" id="services-grid">
-
-        <a href="service-civil-litigation.html" class="service-card-15" id="card-civil">
-          <div class="service-card-15-icon">⚖️</div>
-          <h3 class="service-card-15-title">Civil Litigation</h3>
-          <p class="service-card-15-desc">Civil suits, injunctions, recovery of money, and disputes resolved through
-            court proceedings.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-criminal-matters.html" class="service-card-15" id="card-criminal">
-          <div class="service-card-15-icon">🔒</div>
-          <h3 class="service-card-15-title">Criminal Matters</h3>
-          <p class="service-card-15-desc">FIR filing, bail applications, cheating, fraud, assault, and all criminal
-            proceedings.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-cyber-crime.html" class="service-card-15" id="card-cyber">
-          <div class="service-card-15-icon">💻</div>
-          <h3 class="service-card-15-title">Cyber Crime & Online Fraud</h3>
-          <p class="service-card-15-desc">Online scams, UPI fraud, identity theft, cyber harassment under the IT Act
-            2000.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-consumer-complaints.html" class="service-card-15" id="card-consumer">
-          <div class="service-card-15-icon">🛒</div>
-          <h3 class="service-card-15-title">Consumer Complaints</h3>
-          <p class="service-card-15-desc">Defective products, service deficiency, unfair trade practices before Consumer
-            Forums.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-family-divorce.html" class="service-card-15" id="card-family">
-          <div class="service-card-15-icon">👨‍👩‍👧</div>
-          <h3 class="service-card-15-title">Family & Divorce Matters</h3>
-          <p class="service-card-15-desc">Divorce, maintenance, child custody, alimony, and matrimonial property
-            disputes.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-property-disputes.html" class="service-card-15" id="card-property">
-          <div class="service-card-15-icon">🏠</div>
-          <h3 class="service-card-15-title">Property & Land Disputes</h3>
-          <p class="service-card-15-desc">Encroachment, boundary disputes, illegal possession, tenancy, and land title
-            issues.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-cheque-bounce.html" class="service-card-15" id="card-cheque">
-          <div class="service-card-15-icon">📝</div>
-          <h3 class="service-card-15-title">Cheque Bounce Cases (NI Act)</h3>
-          <p class="service-card-15-desc">Dishonoured cheques under Section 138 of the Negotiable Instruments Act with
-            full recovery.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-employment-labour.html" class="service-card-15" id="card-employment">
-          <div class="service-card-15-icon">👷</div>
-          <h3 class="service-card-15-title">Employment & Labour Disputes</h3>
-          <p class="service-card-15-desc">Wrongful termination, unpaid wages, workplace harassment, and labour law
-            violations.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-corporate-business.html" class="service-card-15" id="card-corporate">
-          <div class="service-card-15-icon">🏢</div>
-          <h3 class="service-card-15-title">Corporate & Business Disputes</h3>
-          <p class="service-card-15-desc">Partnership disputes, shareholder conflicts, company law violations, and
-            business fraud.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-contract-drafting.html" class="service-card-15" id="card-contract">
-          <div class="service-card-15-icon">📄</div>
-          <h3 class="service-card-15-title">Contract Drafting & Review</h3>
-          <p class="service-card-15-desc">Professional drafting and review of agreements, MOUs, NDAs, and business
-            contracts.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-money-recovery.html" class="service-card-15" id="card-money">
-          <div class="service-card-15-icon">💰</div>
-          <h3 class="service-card-15-title">Money Recovery Cases</h3>
-          <p class="service-card-15-desc">Recovery of loans, dues, deposits, and outstanding payments through legal
-            channels.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-legal-notices.html" class="service-card-15" id="card-notices">
-          <div class="service-card-15-icon">📬</div>
-          <h3 class="service-card-15-title">Legal Notices</h3>
-          <p class="service-card-15-desc">Professionally drafted legal notices to individuals, companies, and government
-            authorities.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-documentation.html" class="service-card-15" id="card-docs">
-          <div class="service-card-15-icon">🗂️</div>
-          <h3 class="service-card-15-title">Documentation & Registration</h3>
-          <p class="service-card-15-desc">Affidavits, deeds, property registration, Notary, and all legal documentation
-            services.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-arbitration.html" class="service-card-15" id="card-arbitration">
-          <div class="service-card-15-icon">🤝</div>
-          <h3 class="service-card-15-title">Arbitration & Mediation</h3>
-          <p class="service-card-15-desc">Alternative dispute resolution to settle commercial and civil disputes faster
-            and privately.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-        <a href="service-other-matters.html" class="service-card-15" id="card-other">
-          <div class="service-card-15-icon">🔍</div>
-          <h3 class="service-card-15-title">Other Legal Matters</h3>
-          <p class="service-card-15-desc">Don't see your issue? We handle all types of legal matters — contact us for
-            consultation.</p>
-          <span class="service-card-15-link">Know More →</span>
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="section" data-aos="fade-up" style="background:var(--cream);">
-    <div class="section-inner">
-      <p class="section-tag">Process</p>
-      <h2 class="section-title">How It <em>Works</em></h2>
-      <p class="section-sub">Simple, transparent, and professionally managed from start to finish.</p>
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-num">1</div>
-          <h4 class="step-title">Submit Complaint Form</h4>
-          <p class="step-desc">Fill in your details, describe your issue, and upload supporting documents through our
-            secure portal.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-num">2</div>
-          <h4 class="step-title">Advocate Review</h4>
-          <p class="step-desc">Our legal team reviews your case, identifies applicable laws, and advises the best course
-            of action.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-num">3</div>
-          <h4 class="step-title">Document Verification</h4>
-          <p class="step-desc">We verify all documents and prepare the legal notice or complaint draft for your
-            approval.</p>
-        </div>
-        <div class="step-card">
-          <div class="step-num">4</div>
-          <h4 class="step-title">We Take Action</h4>
-          <p class="step-desc">Legal notice dispatched, complaint filed, and full representation provided at every
-            stage.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="section testimonials-section" data-aos="fade-up" style="background:var(--navy);">
-    <div class="section-inner">
-      <p class="section-tag" style="color:var(--gold-light);">Client Stories</p>
-      <h2 class="section-title" style="color:var(--white);">What Our <em style="color:var(--gold);">Clients Say</em>
-      </h2>
-      <p class="section-sub" style="color:rgba(255,255,255,0.55);">Real outcomes. Real people. Real justice delivered.
-      </p>
-      <div class="testimonials-grid">
-
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"I was cheated online and lost ₹35,000. File My Complaint helped me file an IT Act
-            complaint and within 2 months, the fraudster's account was frozen and I got my money back."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">R</div>
+        <!-- VIEW 1: DASHBOARD -->
+        <section class="view-pane active" id="view-dashboard">
+          
+          <div class="view-header">
             <div>
-              <div class="testimonial-name">Ramesh Patil</div>
-              <div class="testimonial-city">Pune, Maharashtra</div>
+              <h1 class="view-title">Dashboard Overview</h1>
+              <p class="view-subtitle">Real-time financial breakdown for <span class="active-month-text">July 2026</span></p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-secondary btn-sm" id="dash-add-income-btn">+ Add Income</button>
+              <button class="btn btn-primary btn-sm" id="dash-add-expense-btn">+ Add Expense</button>
             </div>
           </div>
-          <div class="testimonial-tag">Cyber Crime</div>
-        </div>
 
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"My employer didn't pay salary for 3 months. The advocate filed a complaint before
-            the Labour Commissioner and I received full payment plus ₹30,000 compensation within 45 days."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">S</div>
-            <div>
-              <div class="testimonial-name">Sunita Verma</div>
-              <div class="testimonial-city">Ahmedabad, Gujarat</div>
-            </div>
-          </div>
-          <div class="testimonial-tag">Labour Dispute</div>
-        </div>
-
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"A defective AC was not replaced despite 6 months of complaints. After filing at
-            Consumer Forum with this team's help, we received full refund + ₹15,000 compensation + litigation costs."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">A</div>
-            <div>
-              <div class="testimonial-name">Ankit Mehta</div>
-              <div class="testimonial-city">Surat, Gujarat</div>
-            </div>
-          </div>
-          <div class="testimonial-tag">Consumer Complaint</div>
-        </div>
-
-        <div class="testimonial-card">
-          <div class="testimonial-stars">★★★★★</div>
-          <p class="testimonial-text">"A cheque of ₹2 lakhs bounced. Within 60 days of filing under Section 138 NI Act,
-            the court ordered full payment plus double the amount as compensation. Excellent advocacy!"</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">P</div>
-            <div>
-              <div class="testimonial-name">Priya Sharma</div>
-              <div class="testimonial-city">Jaipur, Rajasthan</div>
-            </div>
-          </div>
-          <div class="testimonial-tag">Cheque Bounce</div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ADVOCATE PROFILE -->
-  <section class="section" data-aos="fade-up" style="background:var(--white);">
-    <div class="section-inner">
-      <div class="advocate-profile-wrapper">
-        <div class="advocate-image-col">
-          <div class="advocate-img-placeholder">
-            <span style="font-size:4rem;">👨‍⚖️</span>
-          </div>
-          <div class="advocate-credentials">
-            <div class="credential-item"><i data-feather="award" style="width:16px;height:16px;color:var(--gold);"></i>
-              LLB – Gujarat University</div>
-            <div class="credential-item"><i data-feather="award" style="width:16px;height:16px;color:var(--gold);"></i>
-              LLM – Consumer & Labour Law</div>
-            <div class="credential-item"><i data-feather="shield" style="width:16px;height:16px;color:var(--gold);"></i>
-              Bar Council Reg. No. GJ/1842/2010</div>
-            <div class="credential-item"><i data-feather="users" style="width:16px;height:16px;color:var(--gold);"></i>
-              Supreme Court Practitioner</div>
-          </div>
-        </div>
-        <div class="advocate-info-col">
-          <p class="section-tag">Meet Your Advocate</p>
-          <h2 class="section-title">Adv. Rajesh Kumar<br /><em>Sharma</em></h2>
-          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:1.5rem;">With over 15 years of dedicated legal
-            practice, Adv. Rajesh Kumar Sharma has championed the rights of thousands of citizens across Gujarat and
-            beyond. Specializing in consumer protection, civil litigation, cyber law, and labour disputes, he brings
-            deep expertise and a compassionate approach to every case.</p>
-          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:2rem;">His firm belief: <strong
-              style="color:var(--navy);">"Every citizen deserves access to justice — regardless of their financial
-              background."</strong> That's why File My Complaint offers transparent, affordable, and results-driven
-            legal services.</p>
-          <div class="advocate-stats-row">
-            <div class="advocate-stat"><span class="advocate-stat-num" id="adv-cases-handled">0</span><span
-                class="advocate-stat-label">Cases Handled</span></div>
-            <div class="advocate-stat"><span class="advocate-stat-num">15+</span><span class="advocate-stat-label">Years
-                Experience</span></div>
-            <div class="advocate-stat"><span class="advocate-stat-num" id="adv-success-rate">0%</span><span
-                class="advocate-stat-label">Success Rate</span></div>
-          </div>
-          <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;">
-            <a href="https://wa.me/919876543210?text=Hello%20Adv.%20Rajesh%2C%20I%20need%20legal%20consultation"
-              target="_blank" class="btn-primary" style="background:var(--gold);color:white;text-decoration:none;">
-              <i data-feather="message-circle" style="width:16px;height:16px;"></i> WhatsApp Consultation
-            </a>
-            <a href="about.html" class="btn-secondary" style="text-decoration:none;">
-              <i data-feather="info" style="width:16px;height:16px;"></i> Learn More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BOOK A CONSULTATION -->
-  <section class="section" id="consultation" data-aos="fade-up" style="background:var(--cream);">
-    <div class="section-inner">
-      <div class="consultation-wrapper">
-        <div class="consultation-info">
-          <p class="section-tag">Free Consultation</p>
-          <h2 class="section-title">Not Sure Where<br />to <em>Start?</em></h2>
-          <p style="color:var(--text-muted);line-height:1.8;margin-bottom:1.5rem;">Book a free 15-minute consultation
-            with our advocate. Describe your issue and get clarity on which legal forum is right for you, what documents
-            you need, and what the expected outcome is.</p>
-          <ul class="consult-perks">
-            <li><i data-feather="check" style="width:16px;height:16px;color:var(--gold);"></i> Free initial consultation
-            </li>
-            <li><i data-feather="check" style="width:16px;height:16px;color:var(--gold);"></i> Response within 24 hours
-            </li>
-            <li><i data-feather="check" style="width:16px;height:16px;color:var(--gold);"></i> 100% confidential
-              discussion</li>
-            <li><i data-feather="check" style="width:16px;height:16px;color:var(--gold);"></i> Expert advocate review
-            </li>
-          </ul>
-        </div>
-        <div class="consultation-form-card">
-          <h3 style="font-family:var(--font-display);color:var(--navy);margin-bottom:1.5rem;font-size:1.35rem;">Book a
-            Free Consultation</h3>
-          <form id="consult-form" onsubmit="handleConsultForm(event)">
-            <div class="form-group">
-              <label class="form-label">Full Name <span class="required">*</span></label>
-              <input type="text" class="form-input" id="consult-name" placeholder="Your full name" required />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Mobile Number <span class="required">*</span></label>
-                <input type="tel" class="form-input" id="consult-phone" placeholder="+91 98765 43210" required />
+          <!-- Summary Metric Cards (5 Cards) -->
+          <div class="metrics-grid">
+            
+            <div class="glass-card metric-card">
+              <div class="metric-header">
+                <span class="metric-title">TOTAL BUDGET</span>
+                <button class="icon-edit-btn" id="edit-budget-btn" title="Edit Budget Limit">✏️</button>
               </div>
-              <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" class="form-input" id="consult-email" placeholder="yourname@email.com" />
+              <div class="metric-value" id="card-total-budget">$0</div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-purple">Allocated Limit</span>
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Legal Category <span class="required">*</span></label>
-              <select class="form-input" id="consult-category" required>
-                <option value="">Select your issue type</option>
-                <option>Civil Litigation</option>
-                <option>Criminal Matters</option>
-                <option>Cyber Crime & Online Fraud</option>
-                <option>Consumer Complaints</option>
-                <option>Family & Divorce Matters</option>
-                <option>Property & Land Disputes</option>
-                <option>Cheque Bounce Cases</option>
-                <option>Employment & Labour Disputes</option>
-                <option>Corporate & Business Disputes</option>
-                <option>Contract Drafting & Review</option>
-                <option>Money Recovery Cases</option>
-                <option>Legal Notices</option>
-                <option>Documentation & Registration</option>
-                <option>Arbitration & Mediation</option>
-                <option>Other Legal Matters</option>
+
+            <div class="glass-card metric-card">
+              <div class="metric-header">
+                <span class="metric-title">TOTAL INCOME</span>
+                <span class="metric-icon">💵</span>
+              </div>
+              <div class="metric-value c-cyan" id="card-total-income">$0</div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-cyan" id="card-income-count">0 Sources</span>
+              </div>
+            </div>
+
+            <div class="glass-card metric-card">
+              <div class="metric-header">
+                <span class="metric-title">TOTAL EXPENSES</span>
+                <span class="metric-icon">💸</span>
+              </div>
+              <div class="metric-value c-pink" id="card-total-expenses">$0</div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-pink" id="card-used-percent">0% of Budget</span>
+              </div>
+            </div>
+
+            <div class="glass-card metric-card">
+              <div class="metric-header">
+                <span class="metric-title">REMAINING BUDGET</span>
+                <span class="metric-icon">⚖️</span>
+              </div>
+              <div class="metric-value" id="card-remaining-budget">$0</div>
+              <div class="metric-footer">
+                <span class="metric-tag" id="card-remaining-status">Safe Balance</span>
+              </div>
+            </div>
+
+            <div class="glass-card metric-card">
+              <div class="metric-header">
+                <span class="metric-title">TOTAL SAVINGS</span>
+                <span class="metric-icon">🏦</span>
+              </div>
+              <div class="metric-value c-purple" id="card-total-savings">$0</div>
+              <div class="metric-footer">
+                <span class="metric-tag tag-purple" id="card-savings-goals-count">0 Active Goals</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Progress Bars Row -->
+          <div class="progress-section-grid">
+            <div class="glass-card progress-card">
+              <div class="progress-header">
+                <span class="p-title">Overall Budget Consumption</span>
+                <span class="p-val" id="bar-budget-percent-text">0%</span>
+              </div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill" id="bar-budget-fill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-subtext">
+                <span id="bar-budget-spent-sub">$0 spent</span> of <span id="bar-budget-total-sub">$0 total budget</span>
+              </div>
+            </div>
+
+            <div class="glass-card progress-card">
+              <div class="progress-header">
+                <span class="p-title">Savings Target Allocation</span>
+                <span class="p-val" id="bar-savings-percent-text">0%</span>
+              </div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill secondary" id="bar-savings-fill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-subtext">
+                <span id="bar-savings-saved-sub">$0 saved</span> towards goals
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-grid">
+            <div class="glass-card chart-card">
+              <div class="chart-header">
+                <h3>Monthly Spending Overview</h3>
+                <span class="chart-tag">Daily Accumulation</span>
+              </div>
+              <div class="canvas-wrap">
+                <canvas id="spending-chart"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card chart-card">
+              <div class="chart-header">
+                <h3>Category Breakdown</h3>
+                <span class="chart-tag">Expense Share</span>
+              </div>
+              <div class="canvas-wrap flex-center">
+                <canvas id="category-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Expenses Table Preview -->
+          <div class="glass-card table-card" style="margin-top: 32px;">
+            <div class="table-card-header">
+              <h3>Recent Transactions</h3>
+              <button class="btn btn-secondary btn-xs" data-view-trigger="expenses">View All Transactions →</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Notes</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-recent-tbody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- VIEW 2: MONTHLY BUDGET & CATEGORIES -->
+        <section class="view-pane" id="view-budget">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Monthly Category Budgets</h1>
+              <p class="view-subtitle">Set and track limits for individual expense categories in <span class="active-month-text">July 2026</span></p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary btn-sm" id="cat-add-btn">+ Custom Category</button>
+            </div>
+          </div>
+
+          <!-- Categories Cards Grid (10+ Categories) -->
+          <div class="category-cards-grid" id="category-cards-grid">
+            <!-- Dynamically populated category cards -->
+          </div>
+        </section>
+
+        <!-- VIEW 3: EXPENSES MANAGEMENT -->
+        <section class="view-pane" id="view-expenses">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Expenses Tracker</h1>
+              <p class="view-subtitle">Manage, edit and filter all recorded expenses</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary btn-sm" id="expenses-add-btn">+ Add New Expense</button>
+            </div>
+          </div>
+
+          <!-- Filter Toolbar -->
+          <div class="glass-card filter-toolbar">
+            <div class="filter-group">
+              <label for="filter-category">Filter Category:</label>
+              <select id="filter-category" class="filter-select">
+                <option value="ALL">All Categories</option>
               </select>
             </div>
-            <div class="form-group">
-              <label class="form-label">Brief Description <span class="required">*</span></label>
-              <textarea class="form-input" id="consult-desc" rows="3" placeholder="Briefly describe your legal issue..."
-                required></textarea>
+            <div class="filter-group">
+              <label for="filter-sort">Sort By:</label>
+              <select id="filter-sort" class="filter-select">
+                <option value="date-desc">Date (Newest First)</option>
+                <option value="date-asc">Date (Oldest First)</option>
+                <option value="amount-desc">Amount (Highest First)</option>
+                <option value="amount-asc">Amount (Lowest First)</option>
+              </select>
             </div>
-            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;margin-top:0.5rem;">
-              <i data-feather="send" style="width:16px;height:16px;"></i> Submit Consultation Request
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA BANNER -->
-  <section class="section" data-aos="fade-up"
-    style="background:linear-gradient(135deg,var(--navy) 0%,#1a2f4a 100%);padding:4rem 2rem;">
-    <div style="text-align:center;max-width:640px;margin:0 auto;">
-      <h2 style="font-family:var(--font-display);font-size:2rem;color:var(--white);margin-bottom:1rem;">Ready to Seek
-        Justice?</h2>
-      <p style="color:rgba(255,255,255,0.55);margin-bottom:2rem;line-height:1.7;">Don't let your rights be violated in
-        silence. File your complaint today with the support of experienced legal advocates. Justice is just a click
-        away.</p>
-      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-        <a href="complaint.html" class="btn-primary" style="font-size:1rem;padding:1rem 2.5rem;text-decoration:none;">
-          <i data-feather="file-text" style="width:18px;height:18px;"></i> File Your Complaint Now
-        </a>
-        <a href="https://wa.me/919876543210?text=Hello%2C%20I%20need%20legal%20help" target="_blank"
-          class="btn-secondary"
-          style="font-size:1rem;padding:1rem 2.5rem;text-decoration:none;background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);color:white;">
-          <i data-feather="message-circle" style="width:18px;height:18px;"></i> WhatsApp Us
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer data-aos="fade-up">
-    <div class="footer-inner">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <div
-              style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-display);font-size:16px;">
+            <div class="filter-stats">
+              Showing <strong id="expense-filtered-count">0</strong> expenses (<strong id="expense-filtered-sum" class="c-pink">$0</strong> total)
             </div>
-            <span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File My Complaint</span>
           </div>
-          <p>Empowering citizens with legal knowledge and professional advocacy since 2010. Your rights matter — we make
-            sure they are heard.</p>
-        </div>
-        <div class="footer-col">
-          <h4>Practice Areas</h4>
-          <ul>
-            <li><a href="service-civil-litigation.html">Civil Litigation</a></li>
-            <li><a href="service-criminal-matters.html">Criminal Matters</a></li>
-            <li><a href="service-cyber-crime.html">Cyber Crime</a></li>
-            <li><a href="service-consumer-complaints.html">Consumer Complaints</a></li>
-            <li><a href="service-family-divorce.html">Family & Divorce</a></li>
-            <li><a href="service-property-disputes.html">Property Disputes</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>More Services</h4>
-          <ul>
-            <li><a href="service-cheque-bounce.html">Cheque Bounce</a></li>
-            <li><a href="service-employment-labour.html">Labour Disputes</a></li>
-            <li><a href="service-money-recovery.html">Money Recovery</a></li>
-            <li><a href="service-legal-notices.html">Legal Notices</a></li>
-            <li><a href="service-arbitration.html">Arbitration</a></li>
-            <li><a href="service-other-matters.html">Other Matters</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <ul>
-            <li><a href="mailto:info@filemycomplaint.in">📧 info@filemycomplaint.in</a></li>
-            <li><a href="tel:+919876543210">📞 +91 98765 43210</a></li>
-            <li><a href="https://wa.me/919876543210" target="_blank">💬 WhatsApp Us</a></li>
-            <li><a>📍 District Court Road,<br />Ahmedabad, Gujarat</a></li>
-          </ul>
-          <h4 style="margin-top:1.5rem;">Quick Links</h4>
-          <ul>
-            <li><a href="find-your-law.html">Find Your Law</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="complaint.html">File Complaint</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-disclaimer">
-        <strong>Disclaimer:</strong> The information provided on this website is for general informational purposes only
-        and does not constitute legal advice. Consultation with an advocate is recommended for case-specific guidance.
-      </div>
-      <div class="footer-bottom">
-        <span>© 2024 File My Complaint. All rights reserved.</span>
-        <span style="font-family:var(--font-mono);">Payments secured by Razorpay</span>
-      </div>
+
+          <!-- Full Expenses Table -->
+          <div class="glass-card table-card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Month</th>
+                    <th>Notes</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="full-expenses-tbody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 4: INCOME MANAGEMENT -->
+        <section class="view-pane" id="view-income">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Income Sources</h1>
+              <p class="view-subtitle">Record and monitor all earnings and incoming revenues</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary btn-sm" id="income-add-btn">+ Add New Income</button>
+            </div>
+          </div>
+
+          <div class="glass-card table-card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Income Source</th>
+                    <th>Month</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="income-tbody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 5: CATEGORIES MANAGEMENT (ALIAS FOR CATEGORIES VIEW) -->
+        <section class="view-pane" id="view-categories">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Category Management</h1>
+              <p class="view-subtitle">Configure monthly spending limits for each category</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary btn-sm" id="cat-mgmt-add-btn">+ Custom Category</button>
+            </div>
+          </div>
+          <div class="category-cards-grid" id="category-management-grid">
+            <!-- Populated via script -->
+          </div>
+        </section>
+
+        <!-- VIEW 6: SAVINGS GOALS -->
+        <section class="view-pane" id="view-savings">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Savings &amp; Financial Goals</h1>
+              <p class="view-subtitle">Allocate reserves towards future targets and emergency funds</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary btn-sm" id="savings-add-btn">+ New Goal</button>
+            </div>
+          </div>
+
+          <div class="savings-cards-grid" id="savings-cards-grid">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- VIEW 7: SETTINGS & DATA EXPORT/IMPORT -->
+        <section class="view-pane" id="view-settings">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Settings &amp; Data Backup</h1>
+              <p class="view-subtitle">Export/Import CSV data, change preferences, or reset database</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            
+            <!-- Export & Import Card -->
+            <div class="glass-card settings-card">
+              <h3>📥 Data Backup &amp; CSV Export</h3>
+              <p class="settings-desc">Export your income, expenses, and monthly budget summary as standard CSV spreadsheets.</p>
+              
+              <div class="settings-action-group">
+                <button class="btn btn-secondary btn-sm" id="export-expenses-csv-btn">Export Expenses (CSV)</button>
+                <button class="btn btn-secondary btn-sm" id="export-income-csv-btn">Export Income (CSV)</button>
+                <button class="btn btn-primary btn-sm" id="export-json-btn">Export Complete JSON</button>
+              </div>
+
+              <hr class="divider">
+
+              <h3>📤 Import CSV / JSON</h3>
+              <p class="settings-desc">Restore your data backup from a JSON file.</p>
+              <input type="file" id="import-file-input" accept=".json,.csv" style="display:none;">
+              <button class="btn btn-secondary btn-sm" id="import-trigger-btn">Upload Backup File</button>
+            </div>
+
+            <!-- Currency & Preferences Card -->
+            <div class="glass-card settings-card">
+              <h3>🌐 Currency Formatting</h3>
+              <p class="settings-desc">Select your primary currency symbol for all metrics.</p>
+              
+              <div class="form-group" style="max-width: 260px;">
+                <label for="setting-currency">Display Currency:</label>
+                <select id="setting-currency" class="form-control">
+                  <option value="$">$ USD (United States Dollar)</option>
+                  <option value="₹">₹ INR (Indian Rupee)</option>
+                  <option value="€">€ EUR (Euro)</option>
+                  <option value="£">£ GBP (British Pound)</option>
+                </select>
+              </div>
+
+              <hr class="divider">
+
+              <h3 class="c-pink">⚠️ Danger Zone</h3>
+              <p class="settings-desc">Permanently wipe local browser storage and reload default sample data.</p>
+              <button class="btn btn-danger btn-sm" id="reset-storage-btn">Reset All Storage Data</button>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
     </div>
-  </footer>
 
-  <!-- WHATSAPP FLOATING BUTTON -->
-  <a href="https://wa.me/919876543210?text=Hello%2C%20I%20need%20legal%20assistance" target="_blank"
-    class="whatsapp-float" id="whatsapp-float" title="Chat on WhatsApp">
-    <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
-      <path
-        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-      <path
-        d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.11 1.523 5.836L.073 23.27a.75.75 0 00.916.917l5.434-1.45A11.93 11.93 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.714 9.714 0 01-4.951-1.358l-.355-.21-3.676.98.98-3.676-.21-.355A9.714 9.714 0 012.25 12C2.25 6.61 6.61 2.25 12 2.25S21.75 6.61 21.75 12 17.39 21.75 12 21.75z" />
-    </svg>
-    <span class="whatsapp-tooltip">Chat with us</span>
-  </a>
+  </div>
 
-  <!-- QUOTE MODAL -->
-  <div class="modal-overlay" id="quote-modal">
-    <div class="modal-box">
+  <!-- MODALS -->
+
+  <!-- Modal 1: Add / Edit Expense -->
+  <div class="modal-backdrop" id="modal-expense">
+    <div class="glass-card modal-box">
       <div class="modal-header">
-        <h3>Update Today's Quote</h3>
-        <button class="modal-close" onclick="closeQuoteModal()">✕</button>
+        <h3 id="modal-expense-title">Add New Expense</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
       </div>
-      <div class="modal-body">
+      <form id="form-expense">
+        <input type="hidden" id="exp-id">
         <div class="form-group">
-          <label class="form-label">Daily Quote / Legal Insight <span class="required">*</span></label>
-          <textarea class="form-input" id="new-quote-text" rows="4"
-            placeholder="Enter the quote or legal knowledge for today..."></textarea>
+          <label for="exp-name">Expense Name *</label>
+          <input type="text" id="exp-name" class="form-control" placeholder="e.g. Grocery Shopping" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="exp-amount">Amount *</label>
+            <input type="number" id="exp-amount" step="0.01" min="0.01" class="form-control" placeholder="0.00" required>
+          </div>
+          <div class="form-group">
+            <label for="exp-category">Category *</label>
+            <select id="exp-category" class="form-control" required>
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="exp-date">Date *</label>
+            <input type="date" id="exp-date" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="exp-month">Month *</label>
+            <select id="exp-month" class="form-control" required>
+              <!-- Dynamically populated -->
+            </select>
+          </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Author Name</label>
-          <input type="text" class="form-input" id="new-quote-author" value="Adv. Rajesh Kumar Sharma" />
+          <label for="exp-notes">Notes (Optional)</label>
+          <input type="text" id="exp-notes" class="form-control" placeholder="Additional details...">
         </div>
-        <button class="btn-form gold" onclick="saveQuote()">Save & Publish</button>
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Expense</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
-  <script src="api.js"></script>
+  <!-- Modal 2: Add / Edit Income -->
+  <div class="modal-backdrop" id="modal-income">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h3 id="modal-income-title">Add New Income</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <form id="form-income">
+        <input type="hidden" id="inc-id">
+        <div class="form-group">
+          <label for="inc-source">Income Source *</label>
+          <input type="text" id="inc-source" class="form-control" placeholder="e.g. Monthly Salary, Freelance" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inc-amount">Amount *</label>
+            <input type="number" id="inc-amount" step="0.01" min="0.01" class="form-control" placeholder="0.00" required>
+          </div>
+          <div class="form-group">
+            <label for="inc-date">Date *</label>
+            <input type="date" id="inc-date" class="form-control" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inc-month">Month *</label>
+          <select id="inc-month" class="form-control" required>
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Income</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Add New Month -->
+  <div class="modal-backdrop" id="modal-month">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h3>Create New Month</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <form id="form-month">
+        <div class="form-group">
+          <label for="month-name">Month Name *</label>
+          <input type="text" id="month-name" class="form-control" placeholder="e.g. August 2026" required>
+        </div>
+        <div class="form-group">
+          <label for="month-copy-from">Copy Budget Limits From Existing Month:</label>
+          <select id="month-copy-from" class="form-control">
+            <option value="none">Start Fresh (Default Limits)</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Create Month</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Edit Category Budget Limit -->
+  <div class="modal-backdrop" id="modal-category-budget">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h3>Edit Category Budget Limit</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <form id="form-category-budget">
+        <input type="hidden" id="cat-budget-key">
+        <div class="form-group">
+          <label id="cat-budget-label">Category Name</label>
+          <input type="number" id="cat-budget-limit" step="1" min="0" class="form-control" placeholder="Enter budget limit" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Update Limit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 5: Add Savings Deposit / New Goal -->
+  <div class="modal-backdrop" id="modal-savings-deposit">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h3 id="modal-savings-title">Add Deposit to Goal</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <form id="form-savings-deposit">
+        <input type="hidden" id="savings-goal-id">
+        <div class="form-group">
+          <label for="savings-deposit-amount">Deposit Amount *</label>
+          <input type="number" id="savings-deposit-amount" step="0.01" min="0.01" class="form-control" placeholder="0.00" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Add Deposit</button>
+  <!-- Modal 6: Create Custom Category -->
+  <div class="modal-backdrop" id="modal-custom-category">
+    <div class="glass-card modal-box">
+      <div class="modal-header">
+        <h3>Create Custom Category</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <form id="form-custom-category">
+        <div class="form-group">
+          <label for="custom-cat-name">Category Name *</label>
+          <input type="text" id="custom-cat-name" class="form-control" placeholder="e.g. Gaming & Electronics" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="custom-cat-icon">Icon Emoji *</label>
+            <input type="text" id="custom-cat-icon" class="form-control" placeholder="🎮" value="🏷️" required>
+          </div>
+          <div class="form-group">
+            <label for="custom-cat-color">Badge Accent Color</label>
+            <input type="color" id="custom-cat-color" class="form-control" value="#EC4899" style="height: 42px; padding: 2px; cursor: pointer;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="custom-cat-budget">Monthly Budget Limit ($) *</label>
+          <input type="number" id="custom-cat-budget" step="1" min="0" class="form-control" placeholder="300" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Create Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="script.js"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>
-    AOS.init({ duration: 800, once: true });
-    feather.replace();
-
-    // Init auth state
-    (function () {
-      const user = getStoredUser();
-      if (user && getToken()) {
-        currentUser = user;
-        const userSection = document.getElementById('nav-user-section');
-        if (userSection) userSection.style.display = 'flex';
-        const userName = document.getElementById('nav-user-name');
-        if (userName) userName.textContent = user.fname + ' ' + user.lname;
-        if (user.role === 'admin') {
-          const addQuoteBtn = document.getElementById('add-quote-btn');
-          if (addQuoteBtn) addQuoteBtn.style.display = 'block';
-        }
-      }
-    })();
-
-    function toggleMobileNav() {
-      const navLinks = document.getElementById('nav-links');
-      navLinks.classList.toggle('mobile-open');
-    }
-
-    function handleConsultForm(e) {
-      e.preventDefault();
-      const name = document.getElementById('consult-name').value.trim();
-      const phone = document.getElementById('consult-phone').value.trim();
-      const email = document.getElementById('consult-email').value.trim();
-      const category = document.getElementById('consult-category').value;
-      const desc = document.getElementById('consult-desc').value.trim();
-      if (!name || !phone || !category || !desc) {
-        showToast('Please fill in all required fields.', 'error');
-        return;
-      }
-      const phoneRegex = /^[6-9]\d{9}$/;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!phoneRegex.test(phone)) {
-        showToast('Please enter a valid 10-digit mobile number.', 'error');
-        return;
-      }
-      if (email && !emailRegex.test(email)) {
-        showToast('Please enter a valid email address.', 'error');
-        return;
-      }
-      const msg = encodeURIComponent(`Hello Adv. Rajesh, I would like to book a free consultation.\n\nName: ${name}\nPhone: ${phone}\nCategory: ${category}\n\nIssue: ${desc}`);
-      window.open(`https://wa.me/919876543210?text=${msg}`, '_blank');
-      showToast('Redirecting to WhatsApp for consultation...', 'success');
-      document.getElementById('consult-form').reset();
-    }
-
-    function checkAdminAndAddQuote() {
-      document.getElementById('quote-modal').style.display = 'flex';
-    }
-    function closeQuoteModal() {
-      document.getElementById('quote-modal').style.display = 'none';
-    }
-    function saveQuote() {
-      const text = document.getElementById('new-quote-text').value.trim();
-      const author = document.getElementById('new-quote-author').value.trim();
-      if (!text) { showToast('Please enter a quote.', 'error'); return; }
-      document.getElementById('quote-text').textContent = `"${text}"`;
-      document.getElementById('quote-author').textContent = `— ${author}`;
-      closeQuoteModal();
-      showToast('Quote updated successfully!', 'success');
-    }
-    function showToast(msg, type) {
-      const t = document.getElementById('toast');
-      if (t) { t.textContent = msg; t.className = 'toast show ' + (type || ''); setTimeout(() => t.className = 'toast', 3000); }
-    }
-    function signOut() {
-      clearAuth();
-      currentUser = null;
-      window.location.reload();
-    }
-  </script>
 </body>
-
 </html>
