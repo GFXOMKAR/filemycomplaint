@@ -118,7 +118,7 @@ exports.sendOtp = async (req, res, next) => {
     });
   } catch (error) {
     console.error('OTP Send Error:', error);
-    console.log(`[DEMO FALLBACK] OTP for ${email}: ${otp}. Reason: ${error.message}`);
+
     return res.status(200).json({
       success: true,
       message: `OTP generated (Demo Fallback: Email delivery failed: ${error.message}).`,
