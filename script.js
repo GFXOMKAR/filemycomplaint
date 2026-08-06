@@ -413,15 +413,32 @@ async function handleSignupSendOtp() {
 
   if (!fname || !lname || !email || !phone || !city) { showAlert('signup-error', 'All fields are required.'); return; }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showAlert('signup-error', 'Invalid email.'); return; }
-  if (!/^[6-9]\d{9}$/.test(phone)) { showAlert('signup-error', 'Invalid 10-digit mobile.'); return; }
+
+  // Normalize phone (strip spaces, dashes, parentheses, +91/0 prefix)
+  let cleanPhone = phone.replace(/[\s\-()]/g, '');
+  if (cleanPhone.startsWith('+91')) {
+    cleanPhone = cleanPhone.slice(3);
+  } else if (cleanPhone.startsWith('0')) {
+    cleanPhone = cleanPhone.slice(1);
+  }
+
+  if (!/^[6-9]\d{9}$/.test(cleanPhone)) { showAlert('signup-error', 'Invalid 10-digit mobile number.'); return; }
 
   if (btn) { btn.disabled = true; btn.textContent = 'Sending OTP...'; }
 
   try {
-    await api.sendOtp({ isSignup: true, fname, lname, email, phone, city });
+    const data = await api.sendOtp({ isSignup: true, fname, lname, email, phone: cleanPhone, city });
     otpEmail = email;
     document.getElementById('signup-step-1').style.display = 'none';
     document.getElementById('signup-step-2').style.display = 'block';
+    if (data && data.otp) {
+      console.log(`[DEMO/DEV MODE] OTP: ${data.otp}`);
+      const otpInput = document.getElementById('signup-otp');
+      if (otpInput) otpInput.value = data.otp;
+      showToast(data.message || 'Demo Mode: OTP auto-filled!', 'success');
+    } else {
+      showToast('OTP sent successfully to your email.', 'success');
+    }
   } catch (error) {
     showAlert('signup-error', error.message || 'Failed to send OTP.');
   } finally {
@@ -439,10 +456,18 @@ async function handleLoginSendOtp() {
   if (btn) { btn.disabled = true; btn.textContent = 'Sending OTP...'; }
 
   try {
-    await api.sendOtp({ isSignup: false, email });
+    const data = await api.sendOtp({ isSignup: false, email });
     otpEmail = email;
     document.getElementById('login-step-1').style.display = 'none';
     document.getElementById('login-step-2').style.display = 'block';
+    if (data && data.otp) {
+      console.log(`[DEMO/DEV MODE] OTP: ${data.otp}`);
+      const otpInput = document.getElementById('login-otp');
+      if (otpInput) otpInput.value = data.otp;
+      showToast(data.message || 'Demo Mode: OTP auto-filled!', 'success');
+    } else {
+      showToast('OTP sent successfully to your email.', 'success');
+    }
   } catch (error) {
     showAlert('login-error', error.message || 'Failed to send OTP.');
   } finally {

@@ -84,6 +84,24 @@ exports.sendOtp = async (req, res, next) => {
       await user.save();
     }
 
+    const isGmailPlaceholder =
+      !process.env.GMAIL_USER ||
+      process.env.GMAIL_USER.includes('PLACEHOLDER') ||
+      !process.env.GMAIL_APP_PASSWORD ||
+      process.env.GMAIL_APP_PASSWORD.includes('PLACEHOLDER');
+
+    if (isGmailPlaceholder) {
+      console.log('====================================');
+      console.log(`[DEMO MODE] OTP for ${emailLower}: ${otp}`);
+      console.log('====================================');
+      return res.status(200).json({
+        success: true,
+        message: 'OTP generated (Demo Mode: email credentials not configured).',
+        otp,
+        demoMode: true,
+      });
+    }
+
     const mailOptions = {
       from: `"File My Complaint" <${process.env.GMAIL_USER || 'PLACEHOLDER_EMAIL@gmail.com'}>`,
       to: emailLower,
@@ -100,7 +118,16 @@ exports.sendOtp = async (req, res, next) => {
     });
   } catch (error) {
     console.error('OTP Send Error:', error);
-    res.status(500).json({ success: false, message: 'Failed to send OTP. Please check email credentials.' });
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[DEV FALLBACK] OTP for ${emailLower}: ${otp}`);
+      return res.status(200).json({
+        success: true,
+        message: `OTP generated (Dev Fallback: Email sending failed: ${error.message}).`,
+        otp,
+        demoMode: true,
+      });
+    }
+    res.status(500).json({ success: false, message: `Failed to send OTP: ${error.message}` });
   }
 };
 
