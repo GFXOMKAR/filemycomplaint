@@ -41,7 +41,7 @@ const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString()
 exports.sendOtp = async (req, res, next) => {
   try {
     const { email, isSignup, name, fname, lname, phone, city } = req.body;
-    
+
     if (!email) {
       return res.status(400).json({ success: false, message: 'Email is required.' });
     }
@@ -118,7 +118,7 @@ exports.sendOtp = async (req, res, next) => {
     });
   } catch (error) {
     console.error('OTP Send Error:', error);
-    console.log(`[DEMO FALLBACK] OTP for ${emailLower}: ${otp}. Reason: ${error.message}`);
+    console.log(`[DEMO FALLBACK] OTP for ${email}: ${otp}. Reason: ${error.message}`);
     return res.status(200).json({
       success: true,
       message: `OTP generated (Demo Fallback: Email delivery failed: ${error.message}).`,
