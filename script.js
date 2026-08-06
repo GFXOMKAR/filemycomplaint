@@ -657,8 +657,17 @@ function wizardNext(fromStep) {
     const state = document.getElementById('w-state')?.value || '';
     if (!name || !phone || !email || !city || !state) { showToast('Please fill in all personal details.', 'error'); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email.', 'error'); return; }
-    if (!/^[6-9]\d{9}$/.test(phone)) { showToast('Please enter a valid 10-digit mobile.', 'error'); return; }
-    wizardData.name = name; wizardData.phone = phone;
+
+    // Normalize phone (strip spaces, dashes, parentheses, +91/0 prefix)
+    let cleanPhone = phone.replace(/[\s\-()]/g, '');
+    if (cleanPhone.startsWith('+91')) {
+      cleanPhone = cleanPhone.slice(3);
+    } else if (cleanPhone.startsWith('0')) {
+      cleanPhone = cleanPhone.slice(1);
+    }
+
+    if (!/^[6-9]\d{9}$/.test(cleanPhone)) { showToast('Please enter a valid 10-digit mobile number.', 'error'); return; }
+    wizardData.name = name; wizardData.phone = cleanPhone;
     wizardData.email = email; wizardData.city = city; wizardData.state = state;
     // Skip straight to review (step 4) — no laws/draft step for user
     renderFinalReview();
