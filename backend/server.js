@@ -34,6 +34,19 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.get('/api/check-env', (req, res) => {
+  const gmailUser = process.env.GMAIL_USER || '';
+  const gmailPass = process.env.GMAIL_APP_PASSWORD || '';
+  res.json({
+    GMAIL_USER_SET: gmailUser.length > 0,
+    GMAIL_USER_VALUE: gmailUser ? gmailUser.replace(/(.{3}).*(@.*)/, '$1***$2') : 'NOT SET',
+    GMAIL_APP_PASSWORD_SET: gmailPass.length > 0,
+    GMAIL_APP_PASSWORD_LENGTH: gmailPass.replace(/\s/g, '').length,
+    IS_PLACEHOLDER: gmailUser.includes('PLACEHOLDER') || gmailPass.includes('PLACEHOLDER'),
+    NODE_ENV: process.env.NODE_ENV,
+  });
+});
+
 // Serve frontend static files from the parent directory
 const frontendPath = path.join(__dirname, '..');
 app.use(express.static(frontendPath));
