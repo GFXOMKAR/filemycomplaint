@@ -39,6 +39,7 @@ const transporter = nodemailer.createTransport({
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 exports.sendOtp = async (req, res, next) => {
+  let otp = '';
   try {
     const { email, isSignup, name, fname, lname, phone, city } = req.body;
 
@@ -61,7 +62,7 @@ exports.sendOtp = async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'Your account has been blocked.' });
     }
 
-    const otp = generateOTP();
+    otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     if (isSignup) {
