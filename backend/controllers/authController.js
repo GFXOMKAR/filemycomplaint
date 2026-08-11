@@ -28,13 +28,18 @@ const formatUserResponse = (user) => {
 
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER || 'PLACEHOLDER_EMAIL@gmail.com',
-    pass: process.env.GMAIL_APP_PASSWORD || 'PLACEHOLDER_APP_PASSWORD',
-  },
-});
+const getTransporter = () => {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
+};
 
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -104,14 +109,14 @@ exports.sendOtp = async (req, res, next) => {
     }
 
     const mailOptions = {
-      from: `"File My Complaint" <${process.env.GMAIL_USER || 'PLACEHOLDER_EMAIL@gmail.com'}>`,
+      from: `"File My Complaint" <${process.env.GMAIL_USER}>`,
       to: emailLower,
       subject: 'Your Login OTP - File My Complaint',
       text: `Your One-Time Password (OTP) is: ${otp}. It is valid for 10 minutes.`,
       html: `<h3>Welcome to File My Complaint</h3><p>Your One-Time Password (OTP) is: <strong>${otp}</strong></p><p>It is valid for 10 minutes. Do not share this with anyone.</p>`,
     };
 
-    await transporter.sendMail(mailOptions);
+    await getTransporter().sendMail(mailOptions);
 
     res.status(200).json({
       success: true,
