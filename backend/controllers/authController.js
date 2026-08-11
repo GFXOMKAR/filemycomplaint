@@ -112,14 +112,29 @@ exports.sendOtp = async (req, res, next) => {
       html: `<h3>Welcome to File My Complaint</h3><p>Your One-Time Password (OTP) is: <strong>${otp}</strong></p><p>It is valid for 10 minutes. Do not share this with anyone.</p>`,
     };
 
-    await getTransporter().sendMail(mailOptions);
+    const transporter = getTransporter();
+
+    // Verify SMTP connection before sending
+    await transporter.verify();
+
+    await transporter.sendMail(mailOptions);
 
     res.status(200).json({
       success: true,
       message: 'OTP sent successfully to your email.',
     });
   } catch (error) {
-    console.error('OTP Send Error:', error);
+    console.error('OTP Send Error:', error.message, error.code);
+
+    // In production, expose the real error so we can debug it
+    // Do NOT send demo OTP if credentials are configured
+    const gmailConfigured = !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
+    if (gmailConfigured) {
+      return res.status(500).json({
+        success: false,
+        message: `Email delivery failed: ${error.message}. Code: ${error.code || 'unknown'}`,
+      });
+    }
 
     return res.status(200).json({
       success: true,
