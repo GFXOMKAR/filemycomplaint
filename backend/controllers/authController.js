@@ -26,15 +26,19 @@ const formatUserResponse = (user) => {
   };
 };
 
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const getTransporter = () => {
-  const user = (process.env.GMAIL_USER || '').trim();
-  const pass = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass },
-  });
+const sendEmail = async ({ to, subject, html, text }) => {
+  const apiKey = (process.env.RESEND_API_KEY || '').trim();
+  if (!apiKey) throw new Error('RESEND_API_KEY is not configured.');
+
+  const resend = new Resend(apiKey);
+  const fromEmail = process.env.GMAIL_USER
+    ? `File My Complaint <${process.env.GMAIL_USER}>`
+    : 'File My Complaint <onboarding@resend.dev>';
+
+  const { error } = await resend.emails.send({ from: fromEmail, to, subject, html, text });
+  if (error) throw new Error(error.message);
 };
 
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -86,61 +90,36 @@ exports.sendOtp = async (req, res, next) => {
       await user.save();
     }
 
-    const isGmailPlaceholder =
-      !process.env.GMAIL_USER ||
-      process.env.GMAIL_USER.includes('PLACEHOLDER') ||
-      !process.env.GMAIL_APP_PASSWORD ||
-      process.env.GMAIL_APP_PASSWORD.includes('PLACEHOLDER');
+    const isResendConfigured = !!(process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.includes('PLACEHOLDER'));
 
-    if (isGmailPlaceholder) {
+    if (!isResendConfigured) {
       console.log('====================================');
       console.log(`[DEMO MODE] OTP for ${emailLower}: ${otp}`);
       console.log('====================================');
       return res.status(200).json({
         success: true,
-        message: 'OTP generated (Demo Mode: email credentials not configured).',
+        message: 'OTP generated (Demo Mode: RESEND_API_KEY not configured).',
         otp,
         demoMode: true,
       });
     }
 
-    const mailOptions = {
-      from: `"File My Complaint" <${process.env.GMAIL_USER}>`,
+    await sendEmail({
       to: emailLower,
       subject: 'Your Login OTP - File My Complaint',
       text: `Your One-Time Password (OTP) is: ${otp}. It is valid for 10 minutes.`,
       html: `<h3>Welcome to File My Complaint</h3><p>Your One-Time Password (OTP) is: <strong>${otp}</strong></p><p>It is valid for 10 minutes. Do not share this with anyone.</p>`,
-    };
-
-    const transporter = getTransporter();
-
-    // Verify SMTP connection before sending
-    await transporter.verify();
-
-    await transporter.sendMail(mailOptions);
+    });
 
     res.status(200).json({
       success: true,
       message: 'OTP sent successfully to your email.',
     });
   } catch (error) {
-    console.error('OTP Send Error:', error.message, error.code);
-
-    // In production, expose the real error so we can debug it
-    // Do NOT send demo OTP if credentials are configured
-    const gmailConfigured = !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD);
-    if (gmailConfigured) {
-      return res.status(500).json({
-        success: false,
-        message: `Email delivery failed: ${error.message}. Code: ${error.code || 'unknown'}`,
-      });
-    }
-
-    return res.status(200).json({
-      success: true,
-      message: `OTP generated (Demo Fallback: Email delivery failed: ${error.message}).`,
-      otp,
-      demoMode: true,
+    console.error('OTP Send Error:', error.message);
+    return res.status(500).json({
+      success: false,
+      message: `Failed to send OTP: ${error.message}`,
     });
   }
 };
