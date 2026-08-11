@@ -169,22 +169,22 @@
         <p>Fill in the details below. Our advocate will review and contact you within 24–48 hours.</p>
         <form onsubmit="handleServiceForm(event,'Cheque Bounce Cases')">
           <div class="form-row">
-            <div class="form-group"><label class="form-label">Full Name *</label><input type="text" class="form-input" placeholder="Your full legal name" required /></div>
-            <div class="form-group"><label class="form-label">Mobile Number *</label><input type="tel" class="form-input" placeholder="+91 98765 43210" required /></div>
+            <div class="form-group"><label class="form-label">Full Name *</label><input type="text" class="form-input" required /></div>
+            <div class="form-group"><label class="form-label">Mobile Number *</label><input type="tel" class="form-input" required /></div>
           </div>
           <div class="form-row">
-            <div class="form-group"><label class="form-label">Email Address *</label><input type="email" class="form-input" placeholder="yourname@email.com" required /></div>
-            <div class="form-group"><label class="form-label">City / State *</label><input type="text" class="form-input" placeholder="e.g. Mumbai, Maharashtra" required /></div>
+            <div class="form-group"><label class="form-label">Email Address *</label><input type="email" class="form-input" required /></div>
+            <div class="form-group"><label class="form-label">City / State *</label><input type="text" class="form-input" required /></div>
           </div>
           <div class="form-group">
             <label class="form-label">Legal Category</label>
             <input type="text" class="form-input" value="Cheque Bounce Cases (NI Act)" readonly style="opacity:0.7;" />
           </div>
           <div class="form-row">
-            <div class="form-group"><label class="form-label">Cheque Amount *</label><input type="number" class="form-input" placeholder="₹ Amount" required /></div>
+            <div class="form-group"><label class="form-label">Cheque Amount *</label><input type="number" class="form-input" required /></div>
             <div class="form-group"><label class="form-label">Date of Dishonour *</label><input type="date" class="form-input" required /></div>
           </div>
-          <div class="form-group"><label class="form-label">Brief Description of Debt *</label><textarea class="form-input" rows="4" placeholder="Explain why the cheque was issued (loan repayment, business invoice, advance payment) and when it was returned bounced..." required></textarea></div>
+          <div class="form-group"><label class="form-label">Brief Description of Debt *</label><textarea class="form-input" rows="4" required></textarea></div>
           <div class="upload-zone-light" onclick="this.querySelector('input').click()" style="margin-bottom:1.25rem;">
             📎 Click to Upload Supporting Documents (Bounced Cheque + Memo — max 5MB each)
             <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none;" onchange="this.parentElement.querySelector('span')&&(this.parentElement.textContent='✓ '+this.files.length+' file(s) selected')" />
@@ -212,7 +212,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <div style="display:flex;align-items:center;gap:10px;"><div style="width:36px;height:36px;border-radius:50%;background:var(--gold);"></div><span style="font-family:var(--font-display);color:white;font-size:1.1rem;">File My Complaint</span></div>
-          <p>Empowering citizens with legal knowledge and professional advocacy since 2010.</p>
+          <p>Dedicated to Ethical Legal Services.</p>
         </div>
         <div class="footer-col"><h4>Practice Areas</h4><ul>
           <li><a href="service-civil-litigation.html">Civil Litigation</a></li>
@@ -235,7 +235,7 @@
         </ul></div>
       </div>
       <div class="footer-disclaimer"><strong>Disclaimer:</strong> This website provides general legal information only and does not constitute legal advice.</div>
-      <div class="footer-bottom"><span>© 2024 File My Complaint. All rights reserved.</span><span>Payments secured by Razorpay</span></div>
+      <div class="footer-bottom"><span>© File My Complaint. All rights reserved.</span><span>Payments secured by Razorpay</span></div>
     </div>
   </footer>
 

@@ -368,7 +368,7 @@ const LEGAL_GUIDES_DB = [
 // ============ DAILY QUOTE ============
 let dailyQuote = {
   text: "Justice delayed is justice denied. Every citizen has the right to be heard.",
-  author: "Adv. Rajesh Kumar Sharma",
+  author: "Adv. Bhardwaj Surendra Subedar",
   date: "Today's Legal Insight"
 };
 
