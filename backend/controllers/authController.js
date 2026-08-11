@@ -29,15 +29,11 @@ const formatUserResponse = (user) => {
 const nodemailer = require('nodemailer');
 
 const getTransporter = () => {
+  const user = (process.env.GMAIL_USER || '').trim();
+  const pass = (process.env.GMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
   return nodemailer.createTransport({
     service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
-    },
+    auth: { user, pass },
   });
 };
 
