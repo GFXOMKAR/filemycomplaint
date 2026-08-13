@@ -374,8 +374,13 @@ let dailyQuote = {
 
 // ============ PAGE ROUTING ============
 function showPage(page) {
+  if (!page) page = 'index';
   if (page === 'home') page = 'index';
-  window.location.href = page + '.html';
+  if (page.endsWith('.html')) {
+    window.location.href = page;
+  } else {
+    window.location.href = page + '.html';
+  }
 }
 
 function updateNavHighlight() {
@@ -391,8 +396,14 @@ function updateNavHighlight() {
 }
 
 function requireAuth(targetPage) {
-  if (currentUser || getToken()) { showPage(targetPage); }
-  else { sessionStorage.setItem('authRedirect', targetPage); showPage('login'); }
+  const token = (typeof getToken === 'function' && getToken()) || localStorage.getItem('ftc_token') || localStorage.getItem('token');
+  if (currentUser || token) {
+    showPage(targetPage);
+  } else {
+    const dest = targetPage.endsWith('.html') ? targetPage : targetPage + '.html';
+    sessionStorage.setItem('authRedirect', dest);
+    showPage('signup');
+  }
 }
 
 // ============ AUTH ============
@@ -1181,10 +1192,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Global requireAuth function
 window.requireAuth = function(destination) {
-  // Determine actual target file
-  const destFile = destination === 'complaint' ? 'complaint.html' : destination;
+  const destFile = destination === 'complaint' ? 'complaint.html' : (destination.endsWith('.html') ? destination : destination + '.html');
+  const token = (typeof getToken === 'function' && getToken()) || localStorage.getItem('ftc_token') || localStorage.getItem('token');
   
-  if (localStorage.getItem('token')) {
+  if (currentUser || token) {
     window.location.href = destFile;
   } else {
     sessionStorage.setItem('authRedirect', destFile);
