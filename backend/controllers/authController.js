@@ -26,6 +26,13 @@ const formatUserResponse = (user) => {
   };
 };
 
+// ============================================================
+// NOTE: Gmail OTP code is commented out.
+// Using direct login/signup (no OTP) for now.
+// Will be re-enabled when email/OTP flow is ready.
+// ============================================================
+
+/*
 const { Resend } = require('resend');
 
 const sendEmail = async ({ to, subject, html, text }) => {
@@ -123,6 +130,90 @@ exports.sendOtp = async (req, res, next) => {
     });
   }
 };
+*/
+
+// ============================================================
+// DIRECT LOGIN (no OTP) — temporary until Gmail OTP is ready
+// ============================================================
+exports.directLogin = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required.' });
+    }
+
+    const emailLower = email.toLowerCase();
+    const user = await User.findOne({ email: emailLower });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'Account not found. Please sign up first.' });
+    }
+
+    if (user.blocked) {
+      return res.status(403).json({ success: false, message: 'Your account has been blocked.' });
+    }
+
+    const token = signToken(user._id);
+    const userData = formatUserResponse(user);
+
+    res.status(200).json({
+      success: true,
+      message: 'Login successful.',
+      token,
+      user: userData,
+    });
+  } catch (error) {
+    console.error('Direct Login Error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error during login.' });
+  }
+};
+
+// ============================================================
+// DIRECT REGISTER (no OTP) — temporary until Gmail OTP is ready
+// ============================================================
+exports.directRegister = async (req, res, next) => {
+  try {
+    const { email, fname, lname, name, phone, city } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required.' });
+    }
+
+    const emailLower = email.toLowerCase();
+    const existingUser = await User.findOne({ email: emailLower });
+
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: 'Account with this email already exists.' });
+    }
+
+    const fullName = name || [fname, lname].filter(Boolean).join(' ').trim();
+    if (!fullName || !phone) {
+      return res.status(400).json({ success: false, message: 'Name and phone are required for signup.' });
+    }
+
+    const user = await User.create({
+      name: fullName,
+      email: emailLower,
+      phone,
+      city: city || '',
+      role: 'user',
+    });
+
+    const token = signToken(user._id);
+    const userData = formatUserResponse(user);
+
+    res.status(201).json({
+      success: true,
+      message: 'Account created successfully.',
+      token,
+      user: userData,
+    });
+  } catch (error) {
+    console.error('Direct Register Error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error during registration.' });
+  }
+};
 
 exports.verifyOtp = async (req, res, next) => {
   try {
@@ -182,6 +273,57 @@ exports.getMe = async (req, res, next) => {
   } catch (error) {
     console.error('Get Me Error:', error);
     res.status(500).json({ success: false, message: 'Server error during fetching current user.' });
+  }
+};
+
+// ============================================================
+// ADMIN LOGIN — email + password based (for admin panel only)
+// ============================================================
+exports.adminLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password are required.' });
+    }
+
+    const emailLower = email.toLowerCase();
+    // Must select password explicitly (it is select: false in schema)
+    const user = await User.findOne({ email: emailLower }).select('+password');
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    if (user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Access denied. Admin accounts only.' });
+    }
+
+    if (user.blocked) {
+      return res.status(403).json({ success: false, message: 'This account has been blocked.' });
+    }
+
+    if (!user.password) {
+      return res.status(401).json({ success: false, message: 'No password set for this account. Contact super-admin.' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+    }
+
+    const token = signToken(user._id);
+    const userData = formatUserResponse(user);
+
+    res.status(200).json({
+      success: true,
+      message: 'Admin authenticated successfully.',
+      token,
+      user: userData,
+    });
+  } catch (error) {
+    console.error('Admin Login Error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error during admin login.' });
   }
 };
 

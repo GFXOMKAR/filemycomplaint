@@ -58,22 +58,24 @@
             <label class="form-label">Email Address <span class="required">*</span></label>
             <input type="email" class="form-input" id="login-email" placeholder="rahul@example.com" />
           </div>
-          <button class="btn-form gold" onclick="handleLoginSendOtp()" id="login-send-otp-btn">Send OTP →</button>
+          <button class="btn-form gold" onclick="handleLoginSendOtp()" id="login-send-otp-btn">Sign In &rarr;</button>
           <div class="form-divider">or</div>
           <button class="btn-form" onclick="showPage('signup')"
             style="background:transparent;color:var(--text);border:1.5px solid var(--border);">Create New Account</button>
         </div>
 
+        <!-- OTP Step 2 — commented out until Gmail OTP is re-enabled
         <div id="login-step-2" style="display:none;">
           <div class="form-group">
             <label class="form-label">Enter OTP <span class="required">*</span></label>
             <input type="text" class="form-input" id="login-otp" placeholder="6-digit OTP" />
             <p class="form-hint">Please check your email for the OTP.</p>
           </div>
-          <button class="btn-form gold" onclick="handleVerifyOtp('login')" id="login-verify-btn">Verify & Sign In →</button>
+          <button class="btn-form gold" onclick="handleVerifyOtp('login')" id="login-verify-btn">Verify &amp; Sign In &rarr;</button>
           <button class="btn-form" onclick="resetAuthFlow('login')"
-            style="background:transparent;color:var(--text-muted);border:none;margin-top:0.5rem;">← Use a different email</button>
+            style="background:transparent;color:var(--text-muted);border:none;margin-top:0.5rem;">&larr; Use a different email</button>
         </div>
+        -->
         <div style="text-align:center;margin-top:1rem;">
           <!-- <small style="font-size:0.75rem;color:var(--text-muted);">
             🔒 Demo: use <strong>admin@filethecomplaint.in</strong> / <strong>admin123</strong> for admin access

@@ -64,19 +64,43 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 const api = {
-  sendOtp(payload) {
-    return apiRequest('/auth/send-otp', {
+  // Direct login (no OTP) — temporary until Gmail OTP is ready
+  directLogin(payload) {
+    return apiRequest('/auth/login', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
   },
 
-  verifyOtp(payload) {
-    return apiRequest('/auth/verify-otp', {
+  // Direct register (no OTP) — temporary until Gmail OTP is ready
+  directRegister(payload) {
+    return apiRequest('/auth/register', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
   },
+
+  // Admin login — email + password (used by admin-login.html)
+  login(payload) {
+    return apiRequest('/auth/admin-login', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  // OTP methods — commented out for now
+  // sendOtp(payload) {
+  //   return apiRequest('/auth/send-otp', {
+  //     method: 'POST',
+  //     body: JSON.stringify(payload),
+  //   });
+  // },
+  // verifyOtp(payload) {
+  //   return apiRequest('/auth/verify-otp', {
+  //     method: 'POST',
+  //     body: JSON.stringify(payload),
+  //   });
+  // },
 
   getMe() {
     return apiRequest('/auth/me');

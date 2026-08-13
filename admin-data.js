@@ -18,8 +18,20 @@ async function initAdminProfile() {
     setAuth(getToken(), data.user);
 
     const nameEl = document.getElementById('admin-name');
+    const adminFullName = data.user.name || `${data.user.fname || ''} ${data.user.lname || ''}`.trim() || 'Adv. Bhardwaj Surendra Subedar';
     if (nameEl) {
-      nameEl.textContent = data.user.name || `${data.user.fname || ''} ${data.user.lname || ''}`.trim();
+      nameEl.textContent = adminFullName;
+    }
+
+    const avatarEl = document.querySelector('.profile-avatar');
+    if (avatarEl && adminFullName) {
+      const cleanName = adminFullName.replace(/^Adv\.?\s+/i, '').trim();
+      const parts = cleanName.split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) {
+        avatarEl.textContent = (parts[0][0] + parts[1][0]).toUpperCase();
+      } else if (parts.length === 1) {
+        avatarEl.textContent = parts[0].slice(0, 2).toUpperCase();
+      }
     }
   } catch {
     // Route guard handles redirect

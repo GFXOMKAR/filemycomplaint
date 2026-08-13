@@ -64,11 +64,12 @@ const seedAdminUser = async () => {
   try {
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@filethecomplaint.in';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-    const existingAdmin = await User.findOne({ email: adminEmail });
+    const adminName = 'Adv. Bhardwaj Surendra Subedar';
+    const existingAdmin = await User.findOne({ email: adminEmail }).select('+password');
 
     if (!existingAdmin) {
       await User.create({
-        name: 'Admin Advocate',
+        name: adminName,
         email: adminEmail,
         phone: '9999999999',
         password: adminPassword,
@@ -76,6 +77,20 @@ const seedAdminUser = async () => {
         city: 'Ahmedabad',
       });
       console.log(`Default admin created: ${adminEmail}`);
+    } else {
+      let updated = false;
+      if (!existingAdmin.password) {
+        existingAdmin.password = adminPassword;
+        updated = true;
+      }
+      if (existingAdmin.name !== adminName) {
+        existingAdmin.name = adminName;
+        updated = true;
+      }
+      if (updated) {
+        await existingAdmin.save();
+        console.log(`Admin user updated: ${adminEmail} (${adminName})`);
+      }
     }
   } catch (error) {
     console.error('Admin seed error:', error.message);

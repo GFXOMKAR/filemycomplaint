@@ -400,8 +400,9 @@ function requireAuth(targetPage) {
   currentUser = typeof getStoredUser === 'function' ? getStoredUser() : null;
 })();
 
-let otpEmail = '';
-
+// ---------------------------------------------------------------
+// DIRECT SIGNUP — no OTP (Gmail OTP code commented out below)
+// ---------------------------------------------------------------
 async function handleSignupSendOtp() {
   const fname = document.getElementById('signup-fname').value.trim();
   const lname = document.getElementById('signup-lname').value.trim();
@@ -424,28 +425,22 @@ async function handleSignupSendOtp() {
 
   if (!/^[6-9]\d{9}$/.test(cleanPhone)) { showAlert('signup-error', 'Invalid 10-digit mobile number.'); return; }
 
-  if (btn) { btn.disabled = true; btn.textContent = 'Sending OTP...'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Creating Account...'; }
 
   try {
-    const data = await api.sendOtp({ isSignup: true, fname, lname, email, phone: cleanPhone, city });
-    otpEmail = email;
-    document.getElementById('signup-step-1').style.display = 'none';
-    document.getElementById('signup-step-2').style.display = 'block';
-    if (data && data.otp) {
-      console.log(`[DEMO/DEV MODE] OTP: ${data.otp}`);
-      const otpInput = document.getElementById('signup-otp');
-      if (otpInput) otpInput.value = data.otp;
-      showToast(data.message || 'Demo Mode: OTP auto-filled!', 'success');
-    } else {
-      showToast('OTP sent successfully to your email.', 'success');
-    }
+    const data = await api.directRegister({ fname, lname, email, phone: cleanPhone, city });
+    loginUser(data.user, data.token);
+    showToast('Account created successfully! Welcome.', 'success');
   } catch (error) {
-    showAlert('signup-error', error.message || 'Failed to send OTP.');
+    showAlert('signup-error', error.message || 'Failed to create account.');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Send OTP →'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Create Account →'; }
   }
 }
 
+// ---------------------------------------------------------------
+// DIRECT LOGIN — no OTP (Gmail OTP code commented out below)
+// ---------------------------------------------------------------
 async function handleLoginSendOtp() {
   const email = document.getElementById('login-email').value.trim().toLowerCase();
   const btn = document.getElementById('login-send-otp-btn');
@@ -453,37 +448,33 @@ async function handleLoginSendOtp() {
 
   if (!email) { showAlert('login-error', 'Enter email address.'); return; }
 
-  if (btn) { btn.disabled = true; btn.textContent = 'Sending OTP...'; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Signing In...'; }
 
   try {
-    const data = await api.sendOtp({ isSignup: false, email });
-    otpEmail = email;
-    document.getElementById('login-step-1').style.display = 'none';
-    document.getElementById('login-step-2').style.display = 'block';
-    if (data && data.otp) {
-      console.log(`[DEMO/DEV MODE] OTP: ${data.otp}`);
-      const otpInput = document.getElementById('login-otp');
-      if (otpInput) otpInput.value = data.otp;
-      showToast(data.message || 'Demo Mode: OTP auto-filled!', 'success');
-    } else {
-      showToast('OTP sent successfully to your email.', 'success');
-    }
+    const data = await api.directLogin({ email });
+    loginUser(data.user, data.token);
+    showToast('Welcome back!', 'success');
   } catch (error) {
-    showAlert('login-error', error.message || 'Failed to send OTP.');
+    showAlert('login-error', error.message || 'Login failed.');
   } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Send OTP →'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Sign In →'; }
   }
 }
 
+// OTP functions — commented out, will re-enable with Gmail OTP
+/*
+async function handleSignupSendOtp_OTP() {
+  // ... original OTP signup flow ...
+}
+async function handleLoginSendOtp_OTP() {
+  // ... original OTP login flow ...
+}
 async function handleVerifyOtp(type) {
   const otp = document.getElementById(`${type}-otp`).value.trim();
   const btn = document.getElementById(`${type}-verify-btn`);
   document.getElementById(`${type}-error`).style.display = 'none';
-
   if (!otp) { showAlert(`${type}-error`, 'Enter the OTP sent to your email.'); return; }
-
   if (btn) { btn.disabled = true; btn.textContent = 'Verifying...'; }
-
   try {
     const data = await api.verifyOtp({ email: otpEmail, otp });
     loginUser(data.user, data.token);
@@ -493,13 +484,21 @@ async function handleVerifyOtp(type) {
     if (btn) { btn.disabled = false; btn.textContent = type === 'signup' ? 'Verify & Create Account →' : 'Verify & Sign In →'; }
   }
 }
-
 function resetAuthFlow(type) {
   otpEmail = '';
   document.getElementById(`${type}-step-1`).style.display = 'block';
   document.getElementById(`${type}-step-2`).style.display = 'none';
   const otpInput = document.getElementById(`${type}-otp`);
   if (otpInput) otpInput.value = '';
+}
+*/
+
+// Stub: resetAuthFlow kept so any old references don't throw
+function resetAuthFlow(type) {
+  const step1 = document.getElementById(`${type}-step-1`);
+  const step2 = document.getElementById(`${type}-step-2`);
+  if (step1) step1.style.display = 'block';
+  if (step2) step2.style.display = 'none';
 }
 
 
