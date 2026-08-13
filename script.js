@@ -1182,12 +1182,31 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.id = 'nav-hamburger';
     btn.setAttribute('aria-label', 'Toggle menu');
     btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>';
-    btn.onclick = () => {
-      const links = document.getElementById('nav-links');
-      if (links) links.classList.toggle('mobile-open');
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      window.toggleMobileNav();
     };
     nav.appendChild(btn);
   }
+
+  // Global mobile nav toggle
+  window.toggleMobileNav = function () {
+    const navLinks = document.getElementById('nav-links');
+    if (navLinks) navLinks.classList.toggle('mobile-open');
+  };
+
+  // Close mobile nav when clicking any link or outside nav
+  document.addEventListener('click', (e) => {
+    const navLinks = document.getElementById('nav-links');
+    if (!navLinks || !navLinks.classList.contains('mobile-open')) return;
+
+    const linkClicked = e.target.closest('#nav-links a, #nav-links button');
+    const isHamburger = e.target.closest('.nav-hamburger');
+
+    if (linkClicked || (!isHamburger && !e.target.closest('#nav-links'))) {
+      navLinks.classList.remove('mobile-open');
+    }
+  });
 });
 
 // Global requireAuth function

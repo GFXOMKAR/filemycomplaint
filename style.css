@@ -615,6 +615,18 @@ footer {
   margin-bottom: 2.5rem;
 }
 
+.footer-brand .nav-logo-icon,
+.footer-brand div[style*="width:36px"] {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: var(--gold) url(assets/images/3262108f-0531-4768-b8e2-5b91aa576eae.jpg) center/cover no-repeat !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
 .footer-brand p {
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.45);
